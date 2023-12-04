@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
-app.use("/api/workouts", programController);
+app.use("/api/programs", programController);
 app.use("/api/exercises", exerciseRoutes);
 
 app.listen(PORT, () => {
