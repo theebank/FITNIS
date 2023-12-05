@@ -19,6 +19,10 @@ const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
         ]);
         let program = result.rows[0];
         program["workouts"] = yield getWorkouts(req.params.programId);
+        program["workouts"] = yield Promise.all(program["workouts"].map((workout) => __awaiter(void 0, void 0, void 0, function* () {
+            workout["exercises"] = yield getExercisesByDay(workout["workoutid"]);
+            return workout;
+        })));
         res.send(program);
     }
     catch (error) {
@@ -42,6 +46,16 @@ const getWorkouts = (programID) => __awaiter(void 0, void 0, void 0, function* (
         let result = yield db.query("SELECT * FROM Workouts where programid = $1", [
             programID,
         ]);
+        return result.rows;
+    }
+    catch (error) {
+        console.log(error);
+        return [];
+    }
+});
+const getExercisesByDay = (workoutId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let result = yield db.query("SELECT * FROM programexercises WHERE workoutid = $1", [workoutId]);
         return result.rows;
     }
     catch (error) {
