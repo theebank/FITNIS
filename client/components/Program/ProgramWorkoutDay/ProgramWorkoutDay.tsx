@@ -30,9 +30,9 @@ const ProgramWorkoutDay = ({
 
   const WorkoutRendering = ({ Workout, index }: ProgramWorkoutDayProps) => {
     return Workout.exercises.map((e: any) => (
-      <DataTable.Row key={"" + index + e.name}>
+      <DataTable.Row key={"" + index + e.exercisename}>
         <DataTable.Cell style={{ flex: 3, flexWrap: "wrap" }}>
-          <Text ellipsizeMode="tail">{e.name}</Text>
+          <Text ellipsizeMode="tail">{e.exercisename}</Text>
         </DataTable.Cell>
         <DataTable.Cell numeric>{e.sets}</DataTable.Cell>
         <DataTable.Cell numeric>{e.reps}</DataTable.Cell>

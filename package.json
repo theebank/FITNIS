@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "ios": "cd client && expo start --ios",
+    "android": "cd client && expo start --android",
     "start-api": "cd api && node dist/api/src/app.js",
     "build-api": "cd api && tsc",
     "api": "npm run build-api && npm run start-api"

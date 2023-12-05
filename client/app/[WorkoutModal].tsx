@@ -1,18 +1,30 @@
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import { TestData } from "../constants/TestWorkouts";
 import ProgramWorkoutDay from "../components/Program/ProgramWorkoutDay/ProgramWorkoutDay";
 import WMstyles from "../styles/WorkoutModalStyling";
+import axios from "axios";
 
 const index = () => {
   const navigation = useNavigation();
   const { ProgramName, DaysPerWeek, Split, ProgramID } = useLocalSearchParams();
+  const [programDetails, setProgramDetails] = useState<any>(null);
 
-  const ProgramDetails = TestData.find(
-    (element) => Number(ProgramID) == element.id
-  );
+  // const ProgramDetails = TestData.find(
+  //   (element) => Number(ProgramID) == element.id
+  // );
+  useEffect(() => {
+    const fetchProgramDetails = async () => {
+      const response = await axios.get(
+        "http://localhost:3000/api/programs/" + Number(ProgramID)
+      );
+      setProgramDetails(response.data);
+    };
+
+    fetchProgramDetails();
+  }, []);
 
   useEffect(() => {
     // Set the title dynamically
@@ -34,8 +46,8 @@ const index = () => {
         </Card.Content>
       </Card>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {ProgramDetails?.Workouts &&
-          ProgramDetails.Workouts.map((i, key) => (
+        {programDetails?.workouts &&
+          programDetails.workouts.map((i: any, key: string) => (
             <ProgramWorkoutDay Workout={i} index={key} key={"PWD" + key} />
           ))}
       </ScrollView>
