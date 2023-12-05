@@ -1,5 +1,5 @@
 import { TestData } from "../../../client/constants/TestWorkouts";
-import { getExerciseByID } from "./exerciseController";
+import { getExerciseDetailsByID } from "./exerciseController";
 
 const db = require("../db");
 
@@ -12,7 +12,15 @@ export const getProgramByID = async (req: any, res: any) => {
     program["workouts"] = await getWorkouts(req.params.programId);
     program["workouts"] = await Promise.all(
       program["workouts"].map(async (workout: any) => {
-        workout["exercises"] = await getExercisesByDay(workout["workoutid"]);
+        const exercises = await getExercisesByDay(workout["workoutid"]);
+        workout["exercises"] = await Promise.all(
+          exercises.map(async (exercise: any) => {
+            const exerciseDetails = await getExerciseDetailsByID(
+              exercise["exerciseid"]
+            );
+            return { ...exercise, ...exerciseDetails };
+          })
+        );
         return workout;
       })
     );
@@ -41,7 +49,7 @@ const getWorkouts = async (programID: number) => {
     return result.rows;
   } catch (error) {
     console.log(error);
-    return [];
+    throw error;
   }
 };
 const getExercisesByDay = async (workoutId: number) => {
@@ -53,6 +61,6 @@ const getExercisesByDay = async (workoutId: number) => {
     return result.rows;
   } catch (error) {
     console.log(error);
-    return [];
+    throw error;
   }
 };

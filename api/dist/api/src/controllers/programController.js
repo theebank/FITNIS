@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getWorkoutsByUID = exports.getProgramByID = void 0;
 const TestWorkouts_1 = require("../../../client/constants/TestWorkouts");
+const exerciseController_1 = require("./exerciseController");
 const db = require("../db");
 const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -20,7 +21,11 @@ const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
         let program = result.rows[0];
         program["workouts"] = yield getWorkouts(req.params.programId);
         program["workouts"] = yield Promise.all(program["workouts"].map((workout) => __awaiter(void 0, void 0, void 0, function* () {
-            workout["exercises"] = yield getExercisesByDay(workout["workoutid"]);
+            const exercises = yield getExercisesByDay(workout["workoutid"]);
+            workout["exercises"] = yield Promise.all(exercises.map((exercise) => __awaiter(void 0, void 0, void 0, function* () {
+                const exerciseDetails = yield (0, exerciseController_1.getExerciseDetailsByID)(exercise["exerciseid"]);
+                return Object.assign(Object.assign({}, exercise), exerciseDetails);
+            })));
             return workout;
         })));
         res.send(program);
@@ -50,7 +55,7 @@ const getWorkouts = (programID) => __awaiter(void 0, void 0, void 0, function* (
     }
     catch (error) {
         console.log(error);
-        return [];
+        throw error;
     }
 });
 const getExercisesByDay = (workoutId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,6 +65,6 @@ const getExercisesByDay = (workoutId) => __awaiter(void 0, void 0, void 0, funct
     }
     catch (error) {
         console.log(error);
-        return [];
+        throw error;
     }
 });

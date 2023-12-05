@@ -1,5 +1,4 @@
 "use strict";
-// import { TestData } from "../../../client/constants/TestWorkouts";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,29 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getExerciseByID = void 0;
-// export const getWorkoutByID = (req: any, res: any) => {
-//   const workoutPlan = TestData.find(
-//     (e) => e.id.toString() === req.params.workoutId
-//   );
-//   res.send(workoutPlan);
-// };
-// export const getWorkoutsByUID = (req: any, res: any) => {
-//   let test = [1, 4, 6, 8];
-//   const workouts = TestData.filter((e) => {
-//     if (test.find((id) => id === e.id)) {
-//       return true;
-//     }
-//   });
-//   res.send(workouts);
-// };
+exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
 const db = require("../db");
 const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield db.query("SELECT * FROM exercises where id = $1", [
-            req.params.exerciseId,
-        ]);
-        const exercise = result.rows[0];
+        const exercise = yield (0, exports.getExerciseDetailsByID)(req.params.exerciseId);
         res.send(exercise);
     }
     catch (error) {
@@ -41,3 +22,14 @@ const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getExerciseByID = getExerciseByID;
+const getExerciseDetailsByID = (workoutId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield db.query("SELECT * FROM exercises where exerciseid = $1", [workoutId]);
+        return result.rows[0];
+    }
+    catch (error) {
+        console.error("Error executing query", error);
+        throw error;
+    }
+});
+exports.getExerciseDetailsByID = getExerciseDetailsByID;
