@@ -7,7 +7,8 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const programController = require("../controllers/programController");
 // Base end point is /api/programs
-router.get("/:programId", programController.getProgramByID);
+router.get("/id/:programId", programController.getProgramByID);
 router.get("/user/:userId/plans", programController.getWorkoutsByUID);
+router.get("/all", programController.getAllPrograms);
 module.exports = router;
 exports.default = router;

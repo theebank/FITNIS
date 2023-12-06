@@ -22,16 +22,16 @@ const Program = ({
   index: any;
 }) => {
   return (
-    <View key={ProgramDetails.id}>
+    <View key={ProgramDetails.programid}>
       <Swipeable
         renderRightActions={() => (
           <TouchableOpacity
             onPress={() =>
               removePlan(
-                ProgramDetails.ProgramName,
-                ProgramDetails.DaysPerWeek,
-                ProgramDetails.Split,
-                ProgramDetails.Rating
+                ProgramDetails.programname,
+                ProgramDetails.daysperweek,
+                ProgramDetails.split,
+                ProgramDetails.rating
               )
             }
           >
@@ -50,20 +50,20 @@ const Program = ({
                     href={{
                       pathname: "/[WorkoutModal]",
                       params: {
-                        ProgramName: ProgramDetails.ProgramName,
-                        DaysPerWeek: ProgramDetails.DaysPerWeek,
-                        Split: ProgramDetails.Split,
-                        ProgramID: ProgramDetails.id,
+                        ProgramName: ProgramDetails.programname,
+                        DaysPerWeek: ProgramDetails.daysperweek,
+                        Split: ProgramDetails.split,
+                        ProgramID: ProgramDetails.programid,
                       },
                     }}
                     asChild
                   >
-                    <Text>{ProgramDetails.ProgramName}</Text>
+                    <Text>{ProgramDetails.programname}</Text>
                   </Link>
                   <View style={Pstyles.programInfoView}>
-                    <Text>Days/Week: {ProgramDetails.DaysPerWeek}</Text>
-                    <Text>Split: {ProgramDetails.Split}</Text>
-                    <Ratingstars Rating={ProgramDetails.Rating} />
+                    <Text>Days/Week: {ProgramDetails.daysperweek}</Text>
+                    <Text>Split: {ProgramDetails.split}</Text>
+                    <Ratingstars Rating={ProgramDetails.rating} />
                   </View>
                 </View>
               </Pressable>

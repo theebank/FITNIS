@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, View } from "react-native";
 import Program from "../../components/Program/Program";
 import { TestData } from "../../constants/TestWorkouts";
 import WPPstyles from "../../styles/WorkoutPlanPageStyling";
 import { FAB } from "react-native-paper";
 import { Link } from "expo-router";
+import axios from "axios";
 
 const Plans = () => {
   const [Plans, setPlans] = useState(TestData);
+  const [programs, setPrograms] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchWorkoutPlans = async () => {
+      const response = await axios.get(
+        "http://localhost:3000/api/programs/all"
+      );
+      setPrograms(response.data);
+    };
+    fetchWorkoutPlans();
+  }, []);
 
   function addPlan(PName: string, Days: number, Split: string, Rate: number) {
     let i = {
@@ -25,29 +37,34 @@ const Plans = () => {
     Split: string,
     Rate: number
   ) {
-    let temp = [...Plans];
-    let x = Plans.findIndex(
-      (element) =>
-        element.ProgramName === PName &&
-        element.DaysPerWeek === Days &&
-        element.Split === Split &&
-        element.Rating === Rate
+    let temp = [...programs];
+    let x = programs.findIndex(
+      (element: {
+        programname: string;
+        daysperweek: number;
+        split: string;
+        rating: number;
+      }) =>
+        element.programname === PName &&
+        element.daysperweek === Days &&
+        element.split === Split &&
+        element.rating === Rate
     );
     temp.splice(x, 1);
-    setPlans(temp);
+    setPrograms(temp);
   }
 
   return (
     <View style={WPPstyles.backgroundContainer}>
       <FlatList
-        data={Plans}
-        keyExtractor={(item) => item.id.toString()}
+        data={programs}
+        keyExtractor={(item) => item.programid.toString()}
         renderItem={({ item, index }) => (
           <Program
             ProgramDetails={item}
             removePlan={removePlan}
             index={index}
-            key={"FlatList" + item.id.toString()}
+            key={"FlatList" + item.programid.toString()}
           />
         )}
         showsVerticalScrollIndicator={false}

@@ -30,6 +30,16 @@ export const getProgramByID = async (req: any, res: any) => {
     res.status(500).send("Internal server error");
   }
 };
+export const getAllPrograms = async (req: any, res: any) => {
+  try {
+    let result = await db.query("SELECT * FROM programs");
+    let programs = result.rows;
+    res.send(programs);
+  } catch (error) {
+    console.error("Error executing query", error);
+    res.status(500).send("Internal server error");
+  }
+};
 
 export const getWorkoutsByUID = (req: any, res: any) => {
   let test = [1, 4, 6, 8];

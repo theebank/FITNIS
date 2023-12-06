@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getWorkoutsByUID = exports.getProgramByID = void 0;
+exports.getWorkoutsByUID = exports.getAllPrograms = exports.getProgramByID = void 0;
 const TestWorkouts_1 = require("../../../client/constants/TestWorkouts");
 const exerciseController_1 = require("./exerciseController");
 const db = require("../db");
@@ -36,6 +36,18 @@ const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getProgramByID = getProgramByID;
+const getAllPrograms = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let result = yield db.query("SELECT * FROM programs");
+        let programs = result.rows;
+        res.send(programs);
+    }
+    catch (error) {
+        console.error("Error executing query", error);
+        res.status(500).send("Internal server error");
+    }
+});
+exports.getAllPrograms = getAllPrograms;
 const getWorkoutsByUID = (req, res) => {
     let test = [1, 4, 6, 8];
     const workouts = TestWorkouts_1.TestData.filter((e) => {

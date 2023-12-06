@@ -12,13 +12,10 @@ const index = () => {
   const { ProgramName, DaysPerWeek, Split, ProgramID } = useLocalSearchParams();
   const [programDetails, setProgramDetails] = useState<any>(null);
 
-  // const ProgramDetails = TestData.find(
-  //   (element) => Number(ProgramID) == element.id
-  // );
   useEffect(() => {
     const fetchProgramDetails = async () => {
       const response = await axios.get(
-        "http://localhost:3000/api/programs/" + Number(ProgramID)
+        "http://localhost:3000/api/programs/id/" + Number(ProgramID)
       );
       setProgramDetails(response.data);
     };

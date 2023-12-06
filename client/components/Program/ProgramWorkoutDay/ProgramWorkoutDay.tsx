@@ -40,30 +40,32 @@ const ProgramWorkoutDay = ({
     ));
   };
   const [clicked, setClicked] = useState(false);
-  return (
-    <View key={index} style={PWDstyles.outercontainerView}>
-      <Card>
-        <Card.Content>
-          <Pressable onPress={() => setClicked(!clicked)}>
-            <View style={PWDstyles.innerContainerView}>
-              <Text>Day: {index + 1}</Text>
-              {clicked ? (
-                <Entypo name="chevron-down" size={24} color="black" />
-              ) : (
-                <Entypo name="chevron-up" size={24} color="black" />
-              )}
-            </View>
-          </Pressable>
-          {clicked && (
-            <DataTable>
-              {DataTableHeaders()}
-              <WorkoutRendering Workout={Workout} index={index} />
-            </DataTable>
-          )}
-        </Card.Content>
-      </Card>
-    </View>
-  );
+  if (Workout.exercises.length > 0) {
+    return (
+      <View key={index} style={PWDstyles.outercontainerView}>
+        <Card>
+          <Card.Content>
+            <Pressable onPress={() => setClicked(!clicked)}>
+              <View style={PWDstyles.innerContainerView}>
+                <Text>Day: {index + 1}</Text>
+                {clicked ? (
+                  <Entypo name="chevron-down" size={24} color="black" />
+                ) : (
+                  <Entypo name="chevron-up" size={24} color="black" />
+                )}
+              </View>
+            </Pressable>
+            {clicked && (
+              <DataTable>
+                {DataTableHeaders()}
+                <WorkoutRendering Workout={Workout} index={index} />
+              </DataTable>
+            )}
+          </Card.Content>
+        </Card>
+      </View>
+    );
+  }
 };
 
 export default ProgramWorkoutDay;
