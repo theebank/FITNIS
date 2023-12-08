@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getWorkoutsByUID = exports.getAllPrograms = exports.getProgramByID = void 0;
+exports.getWorkoutsByUID = exports.createNewProgram = exports.getAllPrograms = exports.getProgramByID = void 0;
 const TestWorkouts_1 = require("../../../client/constants/TestWorkouts");
 const exerciseController_1 = require("./exerciseController");
 const db = require("../db");
@@ -48,6 +48,28 @@ const getAllPrograms = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllPrograms = getAllPrograms;
+// export const getNewProgramID = async (req: any, res: any) => {
+//   try {
+//     let result = await db.query("SELECT * FROM programs");
+//     let programs = (result.rows.length + 1).toString();
+//     res.send(programs);
+//   } catch (error) {
+//     console.error("Error executing query", error);
+//     res.status(500).send("Internal server error");
+//   }
+// };
+const createNewProgram = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { programname, daysperweek, split, rating } = req.body;
+        let programid = yield getNewProgramID();
+        console.log(programid, programname, daysperweek, split, rating);
+    }
+    catch (error) {
+        console.error("Error executing query", error);
+        res.status(500).send("Internal server error");
+    }
+});
+exports.createNewProgram = createNewProgram;
 const getWorkoutsByUID = (req, res) => {
     let test = [1, 4, 6, 8];
     const workouts = TestWorkouts_1.TestData.filter((e) => {
@@ -58,6 +80,17 @@ const getWorkoutsByUID = (req, res) => {
     res.send(workouts);
 };
 exports.getWorkoutsByUID = getWorkoutsByUID;
+const getNewProgramID = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let result = yield db.query("SELECT * FROM programs");
+        let newID = result.rows.length + 1;
+        return newID;
+    }
+    catch (error) {
+        console.error(error);
+        throw error;
+    }
+});
 const getWorkouts = (programID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let result = yield db.query("SELECT * FROM Workouts where programid = $1", [

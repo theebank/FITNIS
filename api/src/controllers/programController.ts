@@ -40,6 +40,17 @@ export const getAllPrograms = async (req: any, res: any) => {
     res.status(500).send("Internal server error");
   }
 };
+export const createNewProgram = async (req: any, res: any) => {
+  try {
+    const { programname, daysperweek, split, rating } = req.body;
+    let programid = await getNewProgramID();
+
+    console.log(programid, programname, daysperweek, split, rating);
+  } catch (error) {
+    console.error("Error executing query", error);
+    res.status(500).send("Internal server error");
+  }
+};
 
 export const getWorkoutsByUID = (req: any, res: any) => {
   let test = [1, 4, 6, 8];
@@ -49,6 +60,17 @@ export const getWorkoutsByUID = (req: any, res: any) => {
     }
   });
   res.send(workouts);
+};
+
+const getNewProgramID = async () => {
+  try {
+    let result = await db.query("SELECT * FROM programs");
+    let newID = result.rows.length + 1;
+    return newID;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 const getWorkouts = async (programID: number) => {

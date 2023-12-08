@@ -2,7 +2,6 @@ import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-paper";
-import { TestData } from "../constants/TestWorkouts";
 import ProgramWorkoutDay from "../components/Program/ProgramWorkoutDay/ProgramWorkoutDay";
 import WMstyles from "../styles/WorkoutModalStyling";
 import axios from "axios";

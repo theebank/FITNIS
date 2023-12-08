@@ -5,7 +5,9 @@ import WPstyles from "../../styles/WorkoutPageStyling";
 const Workouts = () => {
   return (
     <View style={WPstyles.backgroundContainer}>
-      <Text>Hello</Text>
+      <Text>My Workout Routines</Text>
+
+      <Text>My Past Workouts</Text>
     </View>
   );
 };

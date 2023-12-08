@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, View } from "react-native";
 import Program from "../../components/Program/Program";
-import { TestData } from "../../constants/TestWorkouts";
 import WPPstyles from "../../styles/WorkoutPlanPageStyling";
 import { FAB } from "react-native-paper";
 import { Link } from "expo-router";
 import axios from "axios";
 
 const Plans = () => {
-  const [Plans, setPlans] = useState(TestData);
   const [programs, setPrograms] = useState<any>(null);
 
   useEffect(() => {
@@ -23,13 +21,13 @@ const Plans = () => {
 
   function addPlan(PName: string, Days: number, Split: string, Rate: number) {
     let i = {
-      id: Plans[Plans.length - 1].id + 1,
+      id: programs[programs.length - 1].id + 1,
       ProgramName: PName,
       DaysPerWeek: Days,
       Split: Split,
       Rating: Rate,
     };
-    setPlans((oldPlans) => [...oldPlans, i]);
+    setPrograms((programs: any) => [...programs, i]);
   }
   function removePlan(
     PName: string,
@@ -56,34 +54,42 @@ const Plans = () => {
 
   return (
     <View style={WPPstyles.backgroundContainer}>
-      <FlatList
-        data={programs}
-        keyExtractor={(item) => item.programid.toString()}
-        renderItem={({ item, index }) => (
-          <Program
-            ProgramDetails={item}
-            removePlan={removePlan}
-            index={index}
-            key={"FlatList" + item.programid.toString()}
-          />
-        )}
-        showsVerticalScrollIndicator={false}
-      ></FlatList>
-      <Link href="/addWorkoutModal" asChild>
-        <Pressable>
-          <FAB
-            style={{
-              position: "absolute",
-              margin: 16,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "#87CEFA",
-              borderRadius: 50,
-            }}
-            icon="plus"
-          />
-        </Pressable>
-      </Link>
+      {programs ? (
+        <>
+          <FlatList
+            data={programs}
+            keyExtractor={(item) => item.programid.toString()}
+            renderItem={({ item, index }) => (
+              <Program
+                ProgramDetails={item}
+                removePlan={removePlan}
+                index={index}
+                key={"FlatList" + item.programid.toString()}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          ></FlatList>
+          <Link href="/addWorkoutModal" asChild>
+            <Pressable>
+              <FAB
+                style={{
+                  position: "absolute",
+                  margin: 16,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: "#87CEFA",
+                  borderRadius: 50,
+                }}
+                icon="plus"
+              />
+            </Pressable>
+          </Link>
+        </>
+      ) : (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
     </View>
   );
 };

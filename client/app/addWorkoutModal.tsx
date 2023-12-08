@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import { Card } from "react-native-paper";
 import { Entypo, AntDesign } from "@expo/vector-icons";
@@ -16,13 +16,13 @@ import { TestExercises } from "../constants/TestExercises";
 import { TestData } from "../constants/TestWorkouts";
 import { exerciseType } from "../types/Exercise";
 import RenderExercise from "../components/Program/RenderExercise/RenderExercise";
+import axios from "axios";
 
 const addWorkoutModal = () => {
   const [workoutDay, setWorkoutDay] = useState(1);
   const [workoutDays, setworkoutDays] = useState("0");
 
   const [currentDayPlan, setCurrentDayPlan] = useState<exerciseType[]>([]);
-  // const [workoutplan, setWorkoutplan] = useState<exerciseType[][]>([]);
   var workoutplan: exerciseType[][] = [];
 
   const navigation = useNavigation();
@@ -82,15 +82,29 @@ const addWorkoutModal = () => {
   const exercisesToRender = TestExercises.filter(
     (e) => e.muscletype === selectedType
   );
-  const createWorkout = () => {
-    TestData.push({
-      id: TestData[TestData.length - 1].id + 1,
-      ProgramName: workoutNameInput,
-      DaysPerWeek: 0,
-      Split: "PPL",
-      Rating: 0,
-      Workouts: [],
-    });
+  const createWorkout = async () => {
+    const createProgram = async () => {
+      let data = {
+        programname: workoutNameInput,
+        daysperweek: workoutDays,
+        split: "PPL",
+        rating: 0,
+      };
+      try {
+        let response = await axios.post(
+          "http://localhost:3000/api/programs/newProgram",
+          data
+        );
+        console.log("New program successfully created: ", response.data);
+      } catch (error) {
+        console.error("Error creating new program: ", error);
+      }
+    };
+    const createWorkouts = async () => {
+      console.log(workoutplan);
+    };
+    createProgram();
+    createWorkouts();
   };
   const handleTextInputChange = (text: string) => {
     setWorkoutNameInput(text);

@@ -32,9 +32,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Plans"
+        name="Programs"
         options={{
-          title: "Workout Plans",
+          title: "Programs",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="weight-lifter"
