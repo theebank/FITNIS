@@ -52,7 +52,6 @@ const createNewProgram = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { programname, daysperweek, split, rating } = req.body;
         let programid = yield getNewProgramID();
-        // console.log(programid, programname, daysperweek, split, rating);
         let result = yield db.query("INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *", [programid, programname, daysperweek, split, rating]);
         const newProgram = result.rows[0];
         res.status(201).send(newProgram);

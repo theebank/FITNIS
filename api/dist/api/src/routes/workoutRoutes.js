@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const workoutController = require("../controllers/workoutController");
-// Basic end point is /api/workouts
-router.get("/:workoutId", workoutController.getWorkoutByID);
-router.get("/user/:userId/plans", workoutController.getWorkoutsByUID);
+// Base end point is /api/workouts
+router.get("/all", workoutController.getAllWorkouts);
+router.get("/id/:workoutId", workoutController.getWorkoutByID);
 module.exports = router;
 exports.default = router;

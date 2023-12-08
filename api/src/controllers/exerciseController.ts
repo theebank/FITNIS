@@ -1,8 +1,12 @@
+import { Request, Response } from "express";
+
 const db = require("../db");
 
-export const getExerciseByID = async (req: any, res: any) => {
+export const getExerciseByID = async (req: Request, res: Response) => {
   try {
-    const exercise = await getExerciseDetailsByID(req.params.exerciseId);
+    const exercise = await getExerciseDetailsByID(
+      Number(req.params.exerciseId)
+    );
     res.send(exercise);
   } catch (error) {
     console.error("Error executing query", error);
