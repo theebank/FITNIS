@@ -48,21 +48,14 @@ const getAllPrograms = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllPrograms = getAllPrograms;
-// export const getNewProgramID = async (req: any, res: any) => {
-//   try {
-//     let result = await db.query("SELECT * FROM programs");
-//     let programs = (result.rows.length + 1).toString();
-//     res.send(programs);
-//   } catch (error) {
-//     console.error("Error executing query", error);
-//     res.status(500).send("Internal server error");
-//   }
-// };
 const createNewProgram = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { programname, daysperweek, split, rating } = req.body;
         let programid = yield getNewProgramID();
-        console.log(programid, programname, daysperweek, split, rating);
+        // console.log(programid, programname, daysperweek, split, rating);
+        let result = yield db.query("INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *", [programid, programname, daysperweek, split, rating]);
+        const newProgram = result.rows[0];
+        res.status(201).send(newProgram);
     }
     catch (error) {
         console.error("Error executing query", error);
