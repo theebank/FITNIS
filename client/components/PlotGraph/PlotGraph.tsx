@@ -21,7 +21,7 @@ const chartConfig = {
 const PlotGraph = ({ title, data }: { title: string; data: any }) => {
   return (
     <View>
-      <Card>
+      <Card style={{ backgroundColor: "#ee6c4d" }}>
         <Card.Content>
           <Text>{title}</Text>
           <LineChart

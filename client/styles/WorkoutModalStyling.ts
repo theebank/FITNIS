@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const WMstyles = {
   backgroundContainer: {
-    backgroundColor: "#526AEC",
+    backgroundColor: "#ffffff",
     padding: 10,
     flex: 1,
   },

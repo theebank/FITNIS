@@ -21,20 +21,27 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "#EE6C4D",
+        tabBarInactiveTintColor: "#ffffff",
+        tabBarStyle: { backgroundColor: "#3d5a80" },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
+          headerStyle: { backgroundColor: "#3d5a80" },
+          headerTitleStyle: { color: "#ffffff" },
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
+
       <Tabs.Screen
         name="Programs"
         options={{
           title: "Programs",
+          headerStyle: { backgroundColor: "#3d5a80" },
+          headerTitleStyle: { color: "#ffffff" },
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="weight-lifter"
@@ -48,6 +55,8 @@ export default function TabLayout() {
         name="Workouts"
         options={{
           title: "Workouts",
+          headerStyle: { backgroundColor: "#3d5a80" },
+          headerTitleStyle: { color: "#ffffff" },
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="progress-clock"
@@ -61,6 +70,7 @@ export default function TabLayout() {
         name="one"
         options={{
           title: "Tab One",
+          headerStyle: { backgroundColor: "#3d5a80" },
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>

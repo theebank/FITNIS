@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const WPstyles = StyleSheet.create({
   backgroundContainer: {
-    backgroundColor: "#526AEC",
+    backgroundColor: "#ffffff",
     padding: 10,
     height: "100%",
   },

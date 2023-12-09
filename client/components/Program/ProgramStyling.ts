@@ -12,6 +12,7 @@ const Pstyles = StyleSheet.create({
     justifyContent: "center",
   },
   cardContainer: {
+    backgroundColor: "#ee6c4d",
     margin: 5,
   },
   cardView: {

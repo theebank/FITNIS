@@ -69,7 +69,7 @@ const Plans = () => {
             )}
             showsVerticalScrollIndicator={false}
           ></FlatList>
-          <Link href="/addWorkoutModal" asChild>
+          <Link href="/addProgramModal" asChild>
             <Pressable>
               <FAB
                 style={{

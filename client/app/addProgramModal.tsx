@@ -43,7 +43,7 @@ const addWorkoutModal = () => {
   ];
   const daysToWorkout = ["1", "2", "3", "4", "5", "6", "7"];
   useLayoutEffect(() => {
-    navigation.setOptions({ title: "Add Workout" });
+    navigation.setOptions({ title: "Create Workout Program" });
   }, []);
 
   const addToPlan = (newExercise: exerciseType) => {
