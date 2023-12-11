@@ -2,7 +2,14 @@ import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
 import { Card } from "react-native-paper";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
@@ -40,9 +47,6 @@ const MyWorkoutRoutinesModal: React.FC = () => {
       };
       fetchWDetails();
     }, []);
-    const Title = () => {
-      return <Text>asdf</Text>;
-    };
     return (
       <Card
         style={{
@@ -50,30 +54,34 @@ const MyWorkoutRoutinesModal: React.FC = () => {
           margin: 5,
         }}
       >
-        <Card.Title
-          title={item.day}
-          right={(props) =>
-            clicked ? (
-              <Entypo
-                name="chevron-down"
-                size={24}
-                color="black"
-                onPress={() => {
-                  setClicked(!clicked);
-                }}
-              />
-            ) : (
-              <Entypo
-                name="chevron-up"
-                size={24}
-                color="black"
-                onPress={() => {
-                  setClicked(!clicked);
-                }}
-              />
-            )
-          }
-        />
+        {workoutdetails?.exercises.length > 0 ? (
+          <Card.Title
+            title={item.day}
+            right={(props) =>
+              clicked ? (
+                <Entypo
+                  name="chevron-down"
+                  size={24}
+                  color="black"
+                  onPress={() => {
+                    setClicked(!clicked);
+                  }}
+                />
+              ) : (
+                <Entypo
+                  name="chevron-up"
+                  size={24}
+                  color="black"
+                  onPress={() => {
+                    setClicked(!clicked);
+                  }}
+                />
+              )
+            }
+          />
+        ) : (
+          <Card.Title title={item.day} />
+        )}
         {clicked && (
           <Card.Content style={{ backgroundColor: "#e0fbfc" }}>
             <View>
@@ -95,11 +103,17 @@ const MyWorkoutRoutinesModal: React.FC = () => {
   };
   return (
     <View style={{ display: "flex" }}>
-      <FlatList
-        data={wRoutines}
-        keyExtractor={(item) => item.workoutid.toString()}
-        renderItem={({ item, index }) => <RoutineRender item={item} />}
-      ></FlatList>
+      {wRoutines ? (
+        <FlatList
+          data={wRoutines}
+          keyExtractor={(item) => item.workoutid.toString()}
+          renderItem={({ item, index }) => <RoutineRender item={item} />}
+        ></FlatList>
+      ) : (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
     </View>
   );
 };

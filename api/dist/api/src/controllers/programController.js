@@ -19,7 +19,7 @@ const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
             req.params.programId,
         ]);
         let program = result.rows[0];
-        program["workouts"] = yield getWorkouts(req.params.programId);
+        program["workouts"] = yield getWorkouts(Number(req.params.programId));
         program["workouts"] = yield Promise.all(program["workouts"].map((workout) => __awaiter(void 0, void 0, void 0, function* () {
             const exercises = yield getExercisesByDay(workout["workoutid"]);
             workout["exercises"] = yield Promise.all(exercises.map((exercise) => __awaiter(void 0, void 0, void 0, function* () {

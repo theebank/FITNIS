@@ -44,7 +44,9 @@ export const createNewWorkout = async (req: Request, res: Response) => {
 
 export const getAllWorkouts = async (req: Request, res: Response) => {
   try {
-    let result = await db.query("SELECT * FROM workouts");
+    let result = await db.query(
+      "SELECT * FROM workouts ORDER BY workoutid ASC"
+    );
     let workouts = result.rows;
     res.send(workouts);
   } catch (error) {

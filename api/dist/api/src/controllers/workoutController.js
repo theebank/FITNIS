@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllWorkouts = exports.getWorkoutByID = void 0;
+exports.getAllWorkouts = exports.createNewWorkout = exports.getWorkoutByID = void 0;
 const exerciseController_1 = require("./exerciseController");
 const db = require("../db");
 const getWorkoutByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -18,7 +18,7 @@ const getWorkoutByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
             req.params.workoutId,
         ]);
         let workout = result.rows[0];
-        workout["exercises"] = yield getWorkoutDetails(req.params.workoutId);
+        workout["exercises"] = yield getWorkoutDetails(Number(req.params.workoutId));
         workout["exercises"] = yield Promise.all(workout["exercises"].map((exercise) => __awaiter(void 0, void 0, void 0, function* () {
             const exerciseDetails = yield (0, exerciseController_1.getExerciseDetailsByID)(exercise["exerciseid"]);
             return Object.assign(Object.assign({}, exercise), exerciseDetails);
@@ -31,9 +31,23 @@ const getWorkoutByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getWorkoutByID = getWorkoutByID;
+const createNewWorkout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { day } = req.body;
+        let workoutid = yield getNewWorkoutID();
+        let result = yield db.query("INSERT INTO workouts (workoutid, day) VALUES ($1, $2) RETURNING *", [workoutid, day]);
+        const newWorkout = result.rows[0];
+        res.status(201).send(newWorkout);
+    }
+    catch (error) {
+        console.error("Error executing query", error);
+        res.status(500).send("Internal server error");
+    }
+});
+exports.createNewWorkout = createNewWorkout;
 const getAllWorkouts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let result = yield db.query("SELECT * FROM workouts");
+        let result = yield db.query("SELECT * FROM workouts ORDER BY workoutid ASC");
         let workouts = result.rows;
         res.send(workouts);
     }
@@ -43,6 +57,17 @@ const getAllWorkouts = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllWorkouts = getAllWorkouts;
+const getNewWorkoutID = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let result = yield db.query("SELECT * FROM workouts");
+        let newID = result.rows.length + 1;
+        return newID;
+    }
+    catch (error) {
+        console.error(error);
+        throw error;
+    }
+});
 const getWorkoutDetails = (workoutId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let result = yield db.query("SELECT * FROM programexercises where workoutid = $1", [workoutId]);

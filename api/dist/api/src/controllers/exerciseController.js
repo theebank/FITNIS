@@ -13,7 +13,7 @@ exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
 const db = require("../db");
 const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const exercise = yield (0, exports.getExerciseDetailsByID)(req.params.exerciseId);
+        const exercise = yield (0, exports.getExerciseDetailsByID)(Number(req.params.exerciseId));
         res.send(exercise);
     }
     catch (error) {
