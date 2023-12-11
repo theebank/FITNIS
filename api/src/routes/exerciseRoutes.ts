@@ -4,7 +4,8 @@ const router = express.Router();
 const exerciseController = require("../controllers/exerciseController");
 
 // Base end point is /api/exercises
-router.get("/:exerciseId", exerciseController.getExerciseByID);
+router.get("/id/:exerciseId", exerciseController.getExerciseByID);
+router.get("/all", exerciseController.getAllExercises);
 
 module.exports = router;
 

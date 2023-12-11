@@ -26,3 +26,12 @@ export const getExerciseDetailsByID = async (workoutId: number) => {
     throw error;
   }
 };
+export const getAllExercises = async (req: Request, res: Response) => {
+  try {
+    const result = await db.query("SELECT * FROM exercises");
+    res.send(result.rows);
+  } catch (error) {
+    console.error("Error executing query", error);
+    res.status(500).send("Internal server error");
+  }
+};

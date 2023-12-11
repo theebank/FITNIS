@@ -1,6 +1,6 @@
 import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
-import { useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import { Card } from "react-native-paper";
+import { Card, FAB } from "react-native-paper";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
   const [wRoutines, setWRoutines] = useState<any>(null);
@@ -32,6 +32,11 @@ const MyWorkoutRoutinesModal: React.FC = () => {
         backgroundColor: "#3d5a80",
       },
       headerTintColor: "#ffffff",
+      headerLeft: () => (
+        <Pressable onPress={() => navigation.goBack()}>
+          <Entypo name="chevron-left" size={28} color="white" />
+        </Pressable>
+      ),
     });
   }, [navigation]);
 
@@ -102,7 +107,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     );
   };
   return (
-    <View style={{ display: "flex" }}>
+    <View style={{ backgroundColor: "#ffffff", height: "100%" }}>
       {wRoutines ? (
         <FlatList
           data={wRoutines}
@@ -114,6 +119,21 @@ const MyWorkoutRoutinesModal: React.FC = () => {
           <ActivityIndicator size="large" />
         </View>
       )}
+      <Link href="/createWorkoutModal" asChild>
+        <Pressable>
+          <FAB
+            style={{
+              position: "absolute",
+              margin: 16,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "#87CEFA",
+              borderRadius: 50,
+            }}
+            icon="plus"
+          />
+        </Pressable>
+      </Link>
     </View>
   );
 };

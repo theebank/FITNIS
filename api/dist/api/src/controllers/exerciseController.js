@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
+exports.getAllExercises = exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
 const db = require("../db");
 const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -33,3 +33,14 @@ const getExerciseDetailsByID = (workoutId) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.getExerciseDetailsByID = getExerciseDetailsByID;
+const getAllExercises = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield db.query("SELECT * FROM exercises");
+        res.send(result.rows);
+    }
+    catch (error) {
+        console.error("Error executing query", error);
+        res.status(500).send("Internal server error");
+    }
+});
+exports.getAllExercises = getAllExercises;
