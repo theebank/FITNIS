@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllExercises = exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
+exports.getAllExerciseTypes = exports.getAllExercises = exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
 const db = require("../db");
 const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -44,3 +44,16 @@ const getAllExercises = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getAllExercises = getAllExercises;
+const getAllExerciseTypes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        var result = yield db.query("SELECT muscletype FROM exercises UNION SELECT UNNEST(othermusclesworked) FROM exercises");
+        result = result.rows.filter((e) => e.muscletype !== "");
+        result = result.map((e) => e.muscletype);
+        res.send(result);
+    }
+    catch (error) {
+        console.error("Error executing query", error);
+        res.status(500).send("Internal server error");
+    }
+});
+exports.getAllExerciseTypes = getAllExerciseTypes;

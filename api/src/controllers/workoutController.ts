@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getExerciseDetailsByID } from "./exerciseController";
+import { getNewPExericseID } from "./programExerciseController";
 
 const db = require("../db");
 
@@ -28,11 +29,26 @@ export const getWorkoutByID = async (req: Request, res: Response) => {
 };
 export const createNewWorkout = async (req: Request, res: Response) => {
   try {
-    const { day } = req.body;
+    const { programname, exercises } = req.body;
     let workoutid = await getNewWorkoutID();
+    exercises.map(async (e: any) => {
+      let newid = await getNewPExericseID();
+      let exerciseid = e.exerciseid;
+      let sets = 3;
+      let reps = "6-8";
+      try {
+        let result = await db.query(
+          "INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ",
+          [newid, workoutid, exerciseid, sets, reps]
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    });
     let result = await db.query(
-      "INSERT INTO workouts (workoutid, day) VALUES ($1, $2) RETURNING *",
-      [workoutid, day]
+      "INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *",
+      [workoutid, programname]
     );
     const newWorkout = result.rows[0];
     res.status(201).send(newWorkout);
@@ -57,8 +73,8 @@ export const getAllWorkouts = async (req: Request, res: Response) => {
 
 const getNewWorkoutID = async () => {
   try {
-    let result = await db.query("SELECT * FROM workouts");
-    let newID = result.rows.length + 1;
+    let result = await db.query("SELECT COUNT(*) FROM workouts");
+    let newID = Number(result.rows[0].count) + 1;
     return newID;
   } catch (error) {
     console.error(error);

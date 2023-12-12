@@ -61,7 +61,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
       >
         {workoutdetails?.exercises.length > 0 ? (
           <Card.Title
-            title={item.day}
+            title={item.workoutname}
             right={(props) =>
               clicked ? (
                 <Entypo
@@ -85,7 +85,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
             }
           />
         ) : (
-          <Card.Title title={item.day} />
+          <Card.Title title={item.workoutname} />
         )}
         {clicked && (
           <Card.Content style={{ backgroundColor: "#e0fbfc" }}>

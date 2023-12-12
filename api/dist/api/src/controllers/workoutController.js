@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllWorkouts = exports.createNewWorkout = exports.getWorkoutByID = void 0;
 const exerciseController_1 = require("./exerciseController");
+const programExerciseController_1 = require("./programExerciseController");
 const db = require("../db");
 const getWorkoutByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -33,9 +34,22 @@ const getWorkoutByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.getWorkoutByID = getWorkoutByID;
 const createNewWorkout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { day } = req.body;
+        const { programname, exercises } = req.body;
         let workoutid = yield getNewWorkoutID();
-        let result = yield db.query("INSERT INTO workouts (workoutid, day) VALUES ($1, $2) RETURNING *", [workoutid, day]);
+        exercises.map((e) => __awaiter(void 0, void 0, void 0, function* () {
+            let newid = yield (0, programExerciseController_1.getNewPExericseID)();
+            let exerciseid = e.exerciseid;
+            let sets = 3;
+            let reps = "6-8";
+            try {
+                let result = yield db.query("INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ", [newid, workoutid, exerciseid, sets, reps]);
+            }
+            catch (error) {
+                console.error(error);
+                throw error;
+            }
+        }));
+        let result = yield db.query("INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *", [workoutid, programname]);
         const newWorkout = result.rows[0];
         res.status(201).send(newWorkout);
     }
@@ -59,8 +73,8 @@ const getAllWorkouts = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.getAllWorkouts = getAllWorkouts;
 const getNewWorkoutID = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let result = yield db.query("SELECT * FROM workouts");
-        let newID = result.rows.length + 1;
+        let result = yield db.query("SELECT COUNT(*) FROM workouts");
+        let newID = Number(result.rows[0].count) + 1;
         return newID;
     }
     catch (error) {
