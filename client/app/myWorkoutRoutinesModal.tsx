@@ -11,15 +11,16 @@ import {
   Pressable,
 } from "react-native";
 import { Card, FAB } from "react-native-paper";
+import Constants from "expo-constants";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
+  let apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [wRoutines, setWRoutines] = useState<any>(null);
   const navigation = useNavigation();
+
   useEffect(() => {
     const fetchWRoutines = async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/workouts/all"
-      );
+      const response = await axios.get(`${apiUrl}/workouts/all`);
       setWRoutines(response.data);
     };
     fetchWRoutines();
@@ -46,7 +47,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     useEffect(() => {
       const fetchWDetails = async () => {
         const response = await axios.get(
-          "http://localhost:3000/api/workouts/id/" + item.workoutid
+          `${apiUrl}/workouts/id/` + item.workoutid
         );
         setWorkoutdetails(response.data);
       };
