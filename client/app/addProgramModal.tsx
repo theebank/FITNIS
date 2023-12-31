@@ -15,7 +15,9 @@ import { useNavigation } from "expo-router";
 import { exerciseType } from "../types/Exercise";
 import RenderExercise from "../components/Program/RenderExercise/RenderExercise";
 import axios from "axios";
+import Constants from "expo-constants";
 
+let apiUrl = Constants.expoConfig?.extra?.API_URL;
 const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
   const [workoutDay, setWorkoutDay] = useState(1);
   const [workoutDays, setworkoutDays] = useState("0");
@@ -83,7 +85,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
         };
         try {
           let response = await axios.post(
-            "http://localhost:3000/api/programs/newProgram",
+            `${apiUrl}/programs/newProgram`,
             data
           );
           console.log("New program successfully created: ", response.data);
@@ -125,9 +127,7 @@ const addWorkoutModal = () => {
   const [workoutPlans, setWorkoutPlans] = useState<any>(null);
   useEffect(() => {
     const fetchPlans = async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/workouts/all"
-      );
+      const response = await axios.get(`${apiUrl}/workouts/all`);
       setWorkoutPlans(response.data);
     };
     fetchPlans();

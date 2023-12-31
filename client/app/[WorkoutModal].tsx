@@ -5,8 +5,10 @@ import { Card } from "react-native-paper";
 import ProgramWorkoutDay from "../components/Program/ProgramWorkoutDay/ProgramWorkoutDay";
 import WMstyles from "../styles/WorkoutModalStyling";
 import axios from "axios";
+import Constants from "expo-constants";
 
 const index = () => {
+  let apiUrl = Constants.expoConfig?.extra?.API_URL;
   const navigation = useNavigation();
   const { ProgramName, DaysPerWeek, Split, ProgramID } = useLocalSearchParams();
   const [programDetails, setProgramDetails] = useState<any>(null);
@@ -14,7 +16,7 @@ const index = () => {
   useEffect(() => {
     const fetchProgramDetails = async () => {
       const response = await axios.get(
-        "http://localhost:3000/api/programs/id/" + Number(ProgramID)
+        `${apiUrl}/programs/id/` + Number(ProgramID)
       );
       setProgramDetails(response.data);
     };

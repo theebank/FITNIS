@@ -5,15 +5,15 @@ import WPPstyles from "../../styles/WorkoutPlanPageStyling";
 import { FAB } from "react-native-paper";
 import { Link } from "expo-router";
 import axios from "axios";
+import Constants from "expo-constants";
 
 const Plans = () => {
+  let apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [programs, setPrograms] = useState<any>(null);
 
   useEffect(() => {
     const fetchWorkoutPlans = async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/programs/all"
-      );
+      const response = await axios.get(`${apiUrl}/programs/all`);
       setPrograms(response.data);
     };
     fetchWorkoutPlans();

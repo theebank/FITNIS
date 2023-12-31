@@ -13,8 +13,10 @@ import {
 } from "react-native";
 import { Card, FAB } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
+import Constants from "expo-constants";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
+  let apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [exercises, setExercises] = useState<any>(null);
   const [exercisesByMG, setExercisesByMG] = useState<any>(null);
   const [exerciseTypes, setExerciseTypes] = useState<any>(null);
