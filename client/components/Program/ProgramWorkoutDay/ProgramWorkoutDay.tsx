@@ -28,7 +28,10 @@ const ProgramWorkoutDay = ({
     );
   };
 
-  const WorkoutRendering = ({ Workout, index }: ProgramWorkoutDayProps) => {
+  const WorkoutDetailsRendering = ({
+    Workout,
+    index,
+  }: ProgramWorkoutDayProps) => {
     return Workout.exercises.map((e: any) => (
       <DataTable.Row key={"" + index + e.exercisename}>
         <DataTable.Cell style={{ flex: 3, flexWrap: "wrap" }}>
@@ -39,6 +42,7 @@ const ProgramWorkoutDay = ({
       </DataTable.Row>
     ));
   };
+
   const [clicked, setClicked] = useState(false);
   if (Workout.exercises.length > 0) {
     return (
@@ -47,7 +51,7 @@ const ProgramWorkoutDay = ({
           <Card.Content>
             <Pressable onPress={() => setClicked(!clicked)}>
               <View style={PWDstyles.innerContainerView}>
-                <Text>Day: {index + 1}</Text>
+                <Text>{Workout.workoutname}</Text>
                 {clicked ? (
                   <Entypo name="chevron-down" size={24} color="black" />
                 ) : (
@@ -58,9 +62,19 @@ const ProgramWorkoutDay = ({
             {clicked && (
               <DataTable>
                 {DataTableHeaders()}
-                <WorkoutRendering Workout={Workout} index={index} />
+                <WorkoutDetailsRendering Workout={Workout} index={index} />
               </DataTable>
             )}
+          </Card.Content>
+        </Card>
+      </View>
+    );
+  } else {
+    return (
+      <View key={index} style={PWDstyles.outercontainerView}>
+        <Card>
+          <Card.Content>
+            <Text>{Workout.workoutname}</Text>
           </Card.Content>
         </Card>
       </View>

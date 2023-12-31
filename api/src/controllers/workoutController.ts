@@ -31,25 +31,29 @@ export const createNewWorkout = async (req: Request, res: Response) => {
   try {
     const { programname, exercises } = req.body;
     let workoutid = await getNewWorkoutID();
+    let firstID = await getNewPExericseID();
+
+    let result = await db.query(
+      "INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *",
+      [workoutid, programname]
+    );
     exercises.map(async (e: any) => {
-      let newid = await getNewPExericseID();
+      firstID++;
       let exerciseid = e.exerciseid;
       let sets = 3;
       let reps = "6-8";
+      // console.log(firstID, workoutid, exerciseid, sets, reps);
       try {
         let result = await db.query(
           "INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ",
-          [newid, workoutid, exerciseid, sets, reps]
+          [firstID, workoutid, exerciseid, sets, reps]
         );
       } catch (error) {
         console.error(error);
         throw error;
       }
     });
-    let result = await db.query(
-      "INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *",
-      [workoutid, programname]
-    );
+
     const newWorkout = result.rows[0];
     res.status(201).send(newWorkout);
   } catch (error) {

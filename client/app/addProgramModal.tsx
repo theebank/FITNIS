@@ -7,250 +7,135 @@ import {
   View,
 } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import { Card } from "react-native-paper";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import { TestExercises } from "../constants/TestExercises";
-import { TestData } from "../constants/TestWorkouts";
 import { exerciseType } from "../types/Exercise";
 import RenderExercise from "../components/Program/RenderExercise/RenderExercise";
 import axios from "axios";
 
-const addWorkoutModal = () => {
+const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
   const [workoutDay, setWorkoutDay] = useState(1);
   const [workoutDays, setworkoutDays] = useState("0");
-
-  const [currentDayPlan, setCurrentDayPlan] = useState<exerciseType[]>([]);
-  var workoutplan: exerciseType[][] = [];
-
+  // var workoutplan: exerciseType[][] = [];
   const navigation = useNavigation();
-  const [selectedType, setselectedType] = useState(null);
+  // const [workoutNameInput, setWorkoutNameInput] = useState("");
+  var workoutNameInput = "";
 
-  const [workoutNameInput, setWorkoutNameInput] = useState("");
-
-  const exerciseTypes = [
-    "Chest",
-    "Shoulders",
-    "Quads",
-    "Hamstrings",
-    "Back",
-    "Biceps",
-    "Triceps",
-    "Calves",
-    "Lower Back",
-  ];
-  const daysToWorkout = ["1", "2", "3", "4", "5", "6", "7"];
   useLayoutEffect(() => {
     navigation.setOptions({ title: "Create Workout Program" });
   }, []);
+  var plansAssociated: any[] = [];
 
-  const addToPlan = (newExercise: exerciseType) => {
-    setCurrentDayPlan([...currentDayPlan, newExercise]);
-  };
-  const removeFromPlan = (exerciseToRemove: exerciseType) => {
-    setCurrentDayPlan(currentDayPlan.filter((e) => e !== exerciseToRemove));
-  };
-  const leftChangeDay = () => {
-    if (workoutDay > 1) {
-      let newWorkoutPlan = [...workoutplan];
-      newWorkoutPlan[workoutDay - 1] = currentDayPlan;
-      workoutplan = newWorkoutPlan;
-      if (workoutplan[workoutDay - 1]) {
-        setCurrentDayPlan(workoutplan[workoutDay - 1]);
-      } else {
-        setCurrentDayPlan([]);
-      }
-      setWorkoutDay(workoutDay - 1);
-    }
-  };
-  const rightChangeDay = () => {
-    if (workoutDay.toString() < workoutDays) {
-      let newWorkoutPlan = [...workoutplan];
-      newWorkoutPlan[workoutDay - 1] = currentDayPlan;
-      workoutplan = newWorkoutPlan;
-      if (workoutplan[workoutDay + 1]) {
-        setCurrentDayPlan(workoutplan[workoutDay + 1]);
-      } else {
-        setCurrentDayPlan([]);
-      }
+  const WorkoutDetails = ({
+    onTextChange,
+  }: {
+    onTextChange: (newText: string) => void;
+  }) => {
+    const [text, setText] = useState("");
 
-      setWorkoutDay(workoutDay + 1);
-    }
-  };
-  const exercisesToRender = TestExercises.filter(
-    (e) => e.muscletype === selectedType
-  );
-  const createWorkout = async () => {
-    const createProgram = async () => {
-      let data = {
-        programname: workoutNameInput,
-        daysperweek: workoutDays,
-        split: "PPL",
-        rating: 0,
-      };
-      try {
-        let response = await axios.post(
-          "http://localhost:3000/api/programs/newProgram",
-          data
-        );
-        console.log("New program successfully created: ", response.data);
-      } catch (error) {
-        console.error("Error creating new program: ", error);
-      }
+    const handleTextChange = (newText: string) => {
+      setText(newText);
+      onTextChange(newText);
     };
-    const createWorkouts = async () => {
-      console.log(workoutplan);
-    };
-    createProgram();
-    createWorkouts();
-  };
-  const handleTextInputChange = (text: string) => {
-    setWorkoutNameInput(text);
-  };
-  return (
-    <View style={WPPstyles.backgroundContainer}>
+    return (
       <Card>
         <Card.Content>
           <TextInput
-            placeholder="Enter Workout Name"
-            value={workoutNameInput}
-            onChangeText={handleTextInputChange}
-          ></TextInput>
-          <SelectDropdown
-            defaultButtonText="Select Days/Week"
-            data={daysToWorkout}
-            buttonStyle={{
-              width: "100%",
-              height: 50,
-              backgroundColor: "#FFF",
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: "#444",
-            }}
-            onSelect={(e) => {
-              if (e != workoutDays) {
-                setworkoutDays(e);
-              }
-            }}
-            dropdownIconPosition="right"
-            renderDropdownIcon={(isOpened) => {
-              return (
-                <Entypo
-                  name={isOpened ? "chevron-down" : "chevron-up"}
-                  size={24}
-                  color="black"
-                />
-              );
-            }}
+            style={{ height: 40 }}
+            placeholder="Type here to translate!"
+            onChangeText={handleTextChange}
+            value={text}
           />
         </Card.Content>
       </Card>
-      {workoutDays !== "0" && (
-        <>
-          <Card>
-            <Card.Content>
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <SelectDropdown
-                  defaultButtonText="Select a Muscle Group"
-                  data={exerciseTypes}
-                  buttonStyle={{
-                    width: "100%",
-                    height: 50,
-                    backgroundColor: "#FFF",
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: "#444",
-                  }}
-                  onSelect={(selectedItem) => {
-                    if (selectedItem != selectedType) {
-                      setselectedType(selectedItem);
-                    }
-                  }}
-                  dropdownIconPosition="right"
-                  renderDropdownIcon={(isOpened) => {
-                    return (
-                      <Entypo
-                        name={isOpened ? "chevron-down" : "chevron-up"}
-                        size={24}
-                        color="black"
-                      />
-                    );
-                  }}
-                />
-                {selectedType !== null && (
-                  <View style={{ display: "flex", width: "100%" }}>
-                    <FlatList
-                      data={exercisesToRender}
-                      keyExtractor={(item, index) =>
-                        item.name + index.toString()
-                      }
-                      renderItem={({ item }) => (
-                        <RenderExercise
-                          Exercise={item}
-                          key={item.name + "RenderExercise"}
-                          addToPlan={addToPlan}
-                          removeFromPlan={removeFromPlan}
-                          workoutplan={currentDayPlan}
-                        />
-                      )}
-                      showsVerticalScrollIndicator={true}
-                    ></FlatList>
-                  </View>
-                )}
-              </View>
-            </Card.Content>
-          </Card>
-        </>
-      )}
-      {currentDayPlan.length !== 0 && (
-        <Card>
-          <Card.Content>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Pressable onPress={leftChangeDay}>
-                <AntDesign name="arrowleft" size={24} color="black" />
-              </Pressable>
-              <View style={{ justifyContent: "center" }}>
-                <Text>{"Day :" + workoutDay}</Text>
-              </View>
-              <Pressable onPress={rightChangeDay}>
-                <AntDesign name="arrowright" size={24} color="black" />
-              </Pressable>
-            </View>
-            <View>
-              {currentDayPlan.map((e) => {
-                return <Text key={e.name + "workoutcart"}>{e.name}</Text>;
-              })}
-              <Button
-                title="Clear current day"
-                onPress={() => setCurrentDayPlan([])}
-              ></Button>
-            </View>
-          </Card.Content>
-        </Card>
-      )}
+    );
+  };
+  const RenderWorkoutPrograms = () => {
+    return (
       <Card>
         <Card.Content>
-          <View style={{ display: "flex", flexDirection: "row" }}>
-            <Button title="Create Workout" onPress={createWorkout}></Button>
-            <Button
-              title="Remove all exercises"
-              onPress={() => {
-                workoutplan = [];
-                setCurrentDayPlan([]);
-              }}
-            ></Button>
-          </View>
+          {workoutPlans?.map((e: any) => {
+            return (
+              <View>
+                <Text>{e.workoutname}</Text>
+                <Button
+                  onPress={() => plansAssociated.push(e.workoutid)}
+                  title="+"
+                ></Button>
+              </View>
+            );
+          })}
         </Card.Content>
       </Card>
-    </View>
+    );
+  };
+  const CreateWorkoutButton = () => {
+    const createWorkout = async () => {
+      const createProgram = async () => {
+        let data = {
+          // programname: workoutNameInput,
+          daysperweek: workoutDays,
+          split: "PPL",
+          rating: 0,
+        };
+        try {
+          let response = await axios.post(
+            "http://localhost:3000/api/programs/newProgram",
+            data
+          );
+          console.log("New program successfully created: ", response.data);
+        } catch (error) {
+          console.error("Error creating new program: ", error);
+        }
+      };
+      const createWorkouts = async () => {
+        console.log(plansAssociated);
+      };
+      // First create workout program
+      // Map through workouts and create association between them
+      // Should only be sending: Workout program details (name, daysperweek, etc) and [workoutprogramids]
+      // createProgram();
+      createWorkouts();
+    };
+    return <Button onPress={createWorkout} title="Create Workout" />;
+  };
+
+  const handleChildTextChange = (newText: string) => {
+    workoutNameInput = newText;
+  };
+
+  return (
+    <>
+      <View style={WPPstyles.backgroundContainer}>
+        <WorkoutDetails onTextChange={handleChildTextChange} />
+        {/* Two options  */}
+        {/* 1) Make association between workout programs and workout plans */}
+        <RenderWorkoutPrograms />
+        {/* 2) Create workout program at the time of plan creation */}
+        <CreateWorkoutButton />
+      </View>
+    </>
+  );
+};
+
+const addWorkoutModal = () => {
+  const [workoutPlans, setWorkoutPlans] = useState<any>(null);
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const response = await axios.get(
+        "http://localhost:3000/api/workouts/all"
+      );
+      setWorkoutPlans(response.data);
+    };
+    fetchPlans();
+  }, []);
+  return (
+    <>
+      <AddWorkoutModalRender workoutPlans={workoutPlans} />
+    </>
   );
 };
 

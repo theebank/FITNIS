@@ -36,20 +36,22 @@ const createNewWorkout = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { programname, exercises } = req.body;
         let workoutid = yield getNewWorkoutID();
+        let firstID = yield (0, programExerciseController_1.getNewPExericseID)();
+        let result = yield db.query("INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *", [workoutid, programname]);
         exercises.map((e) => __awaiter(void 0, void 0, void 0, function* () {
-            let newid = yield (0, programExerciseController_1.getNewPExericseID)();
+            firstID++;
             let exerciseid = e.exerciseid;
             let sets = 3;
             let reps = "6-8";
+            // console.log(firstID, workoutid, exerciseid, sets, reps);
             try {
-                let result = yield db.query("INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ", [newid, workoutid, exerciseid, sets, reps]);
+                let result = yield db.query("INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ", [firstID, workoutid, exerciseid, sets, reps]);
             }
             catch (error) {
                 console.error(error);
                 throw error;
             }
         }));
-        let result = yield db.query("INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *", [workoutid, programname]);
         const newWorkout = result.rows[0];
         res.status(201).send(newWorkout);
     }
