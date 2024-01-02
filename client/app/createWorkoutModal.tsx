@@ -26,15 +26,11 @@ const MyWorkoutRoutinesModal: React.FC = () => {
 
   useEffect(() => {
     const fetchExercises = async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/exercises/all"
-      );
+      const response = await axios.get(`${apiUrl}/exercises/all`);
       setExercises(response.data);
     };
     const fetchExerciseTypes = async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/exercises/alltypes"
-      );
+      const response = await axios.get(`${apiUrl}/exercises/alltypes`);
       setExerciseTypes(response.data);
     };
     fetchExercises();
@@ -67,7 +63,6 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     });
   };
   const addtoCart = (eID: number) => {
-    console.log(workoutCart);
     setWorkoutCart([
       ...workoutCart,
       exercises.find((e: any) => e.exerciseid === eID),
@@ -76,10 +71,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
   const createWorkout = async () => {
     let data = { programname: "Test", exercises: workoutCart };
     try {
-      let wResponse = await axios.post(
-        "http://localhost:3000/api/workouts/newWorkout",
-        data
-      );
+      let wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
       workoutCart.map((e: any) => {});
     } catch (error) {
       console.error("Error creating new workout: ", error);
@@ -152,12 +144,14 @@ const MyWorkoutRoutinesModal: React.FC = () => {
           );
         })}
       </View>
-      <Button
-        onPress={() => {
-          createWorkout();
-        }}
-        title="Create Workout"
-      />
+      <Link href="/myWorkoutRoutinesModal" asChild>
+        <Button
+          onPress={() => {
+            createWorkout();
+          }}
+          title="Create Workout"
+        />
+      </Link>
     </View>
   );
 };

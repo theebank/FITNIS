@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { TestData } from "../../../client/constants/TestWorkouts";
 import { getExerciseDetailsByID } from "./exerciseController";
+import { getWorkoutNameByID } from "./workoutController";
 
 const db = require("../db");
 
@@ -13,6 +14,9 @@ export const getProgramByID = async (req: Request, res: Response) => {
     program["workouts"] = await getWorkouts(Number(req.params.programId));
     program["workouts"] = await Promise.all(
       program["workouts"].map(async (workout: any) => {
+        workout["workoutname"] = await getWorkoutNameByID(
+          Number(workout["workoutid"])
+        );
         const exercises = await getExercisesByDay(workout["workoutid"]);
         workout["exercises"] = await Promise.all(
           exercises.map(async (exercise: any) => {
@@ -42,19 +46,25 @@ export const getAllPrograms = async (req: Request, res: Response) => {
   }
 };
 export const createNewProgram = async (req: Request, res: Response) => {
+  // 1) First create workout program
   try {
-    const { programname, daysperweek, split, rating } = req.body;
+    const { programname, daysperweek, split, rating, plansAssociated } =
+      req.body;
     let programid = await getNewProgramID();
     let result = await db.query(
       "INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [programid, programname, daysperweek, split, rating]
     );
     const newProgram = result.rows[0];
+    // 2) Map through workouts and create association between them
+
     res.status(201).send(newProgram);
   } catch (error) {
     console.error("Error executing query", error);
     res.status(500).send("Internal server error");
   }
+
+  // 3) Should only be sending: Workout program details (name, daysperweek, etc) and [workoutprogramids]
 };
 
 export const getWorkoutsByUID = (req: Request, res: Response) => {
@@ -80,9 +90,10 @@ const getNewProgramID = async () => {
 
 const getWorkouts = async (programID: number) => {
   try {
-    let result = await db.query("SELECT * FROM Workouts where programid = $1", [
-      programID,
-    ]);
+    let result = await db.query(
+      "SELECT * FROM workoutprograms where programid = $1",
+      [programID]
+    );
     return result.rows;
   } catch (error) {
     console.log(error);

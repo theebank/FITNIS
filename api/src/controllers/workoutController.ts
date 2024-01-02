@@ -98,3 +98,14 @@ const getWorkoutDetails = async (workoutId: number) => {
     throw error;
   }
 };
+export const getWorkoutNameByID = async (workoutId: number) => {
+  try {
+    let result = await db.query("select * from workouts where workoutid = $1", [
+      workoutId,
+    ]);
+    return result.rows[0].workoutname;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

@@ -1,7 +1,12 @@
 import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
-import { Link, useNavigation } from "expo-router";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { Link, useNavigation, useFocusEffect } from "expo-router";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -18,13 +23,15 @@ const MyWorkoutRoutinesModal: React.FC = () => {
   const [wRoutines, setWRoutines] = useState<any>(null);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchWRoutines = async () => {
-      const response = await axios.get(`${apiUrl}/workouts/all`);
-      setWRoutines(response.data);
-    };
-    fetchWRoutines();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchWRoutines = async () => {
+        const response = await axios.get(`${apiUrl}/workouts/all`);
+        setWRoutines(response.data);
+      };
+      fetchWRoutines();
+    }, [apiUrl])
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({

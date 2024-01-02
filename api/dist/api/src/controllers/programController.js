@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getWorkoutsByUID = exports.createNewProgram = exports.getAllPrograms = exports.getProgramByID = void 0;
 const TestWorkouts_1 = require("../../../client/constants/TestWorkouts");
 const exerciseController_1 = require("./exerciseController");
+const workoutController_1 = require("./workoutController");
 const db = require("../db");
 const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -21,6 +22,8 @@ const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
         let program = result.rows[0];
         program["workouts"] = yield getWorkouts(Number(req.params.programId));
         program["workouts"] = yield Promise.all(program["workouts"].map((workout) => __awaiter(void 0, void 0, void 0, function* () {
+            console.log(yield (0, workoutController_1.getWorkoutNameByID)(Number(workout["workoutid"])));
+            workout["workoutname"] = yield (0, workoutController_1.getWorkoutNameByID)(Number(workout["workoutid"]));
             const exercises = yield getExercisesByDay(workout["workoutid"]);
             workout["exercises"] = yield Promise.all(exercises.map((exercise) => __awaiter(void 0, void 0, void 0, function* () {
                 const exerciseDetails = yield (0, exerciseController_1.getExerciseDetailsByID)(exercise["exerciseid"]);
@@ -49,17 +52,20 @@ const getAllPrograms = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.getAllPrograms = getAllPrograms;
 const createNewProgram = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // 1) First create workout program
     try {
-        const { programname, daysperweek, split, rating } = req.body;
+        const { programname, daysperweek, split, rating, plansAssociated } = req.body;
         let programid = yield getNewProgramID();
         let result = yield db.query("INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *", [programid, programname, daysperweek, split, rating]);
         const newProgram = result.rows[0];
+        // 2) Map through workouts and create association between them
         res.status(201).send(newProgram);
     }
     catch (error) {
         console.error("Error executing query", error);
         res.status(500).send("Internal server error");
     }
+    // 3) Should only be sending: Workout program details (name, daysperweek, etc) and [workoutprogramids]
 });
 exports.createNewProgram = createNewProgram;
 const getWorkoutsByUID = (req, res) => {
@@ -85,9 +91,7 @@ const getNewProgramID = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 const getWorkouts = (programID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let result = yield db.query("SELECT * FROM Workouts where programid = $1", [
-            programID,
-        ]);
+        let result = yield db.query("SELECT * FROM workoutprograms where programid = $1", [programID]);
         return result.rows;
     }
     catch (error) {

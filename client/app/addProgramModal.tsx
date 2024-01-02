@@ -47,7 +47,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
         <Card.Content>
           <TextInput
             style={{ height: 40 }}
-            placeholder="Type here to translate!"
+            placeholder="Enter Workout Name"
             onChangeText={handleTextChange}
             value={text}
           />
@@ -78,10 +78,11 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
     const createWorkout = async () => {
       const createProgram = async () => {
         let data = {
-          // programname: workoutNameInput,
-          daysperweek: workoutDays,
+          programname: workoutNameInput,
+          daysperweek: plansAssociated.length,
           split: "PPL",
           rating: 0,
+          plansAssociated: plansAssociated,
         };
         try {
           let response = await axios.post(
@@ -93,14 +94,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
           console.error("Error creating new program: ", error);
         }
       };
-      const createWorkouts = async () => {
-        console.log(plansAssociated);
-      };
-      // First create workout program
-      // Map through workouts and create association between them
-      // Should only be sending: Workout program details (name, daysperweek, etc) and [workoutprogramids]
-      // createProgram();
-      createWorkouts();
+      createProgram();
     };
     return <Button onPress={createWorkout} title="Create Workout" />;
   };

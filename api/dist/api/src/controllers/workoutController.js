@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllWorkouts = exports.createNewWorkout = exports.getWorkoutByID = void 0;
+exports.getWorkoutNameByID = exports.getAllWorkouts = exports.createNewWorkout = exports.getWorkoutByID = void 0;
 const exerciseController_1 = require("./exerciseController");
 const programExerciseController_1 = require("./programExerciseController");
 const db = require("../db");
@@ -94,3 +94,16 @@ const getWorkoutDetails = (workoutId) => __awaiter(void 0, void 0, void 0, funct
         throw error;
     }
 });
+const getWorkoutNameByID = (workoutId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let result = yield db.query("select * from workouts where workoutid = $1", [
+            workoutId,
+        ]);
+        return result.rows[0].workoutname;
+    }
+    catch (error) {
+        console.error(error);
+        throw error;
+    }
+});
+exports.getWorkoutNameByID = getWorkoutNameByID;
