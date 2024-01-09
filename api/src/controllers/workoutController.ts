@@ -109,3 +109,6 @@ export const getWorkoutNameByID = async (workoutId: number) => {
     throw error;
   }
 };
+const testFunction = () => {
+  console.log("test");
+};
