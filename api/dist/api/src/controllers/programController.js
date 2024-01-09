@@ -22,7 +22,6 @@ const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
         let program = result.rows[0];
         program["workouts"] = yield getWorkouts(Number(req.params.programId));
         program["workouts"] = yield Promise.all(program["workouts"].map((workout) => __awaiter(void 0, void 0, void 0, function* () {
-            console.log(yield (0, workoutController_1.getWorkoutNameByID)(Number(workout["workoutid"])));
             workout["workoutname"] = yield (0, workoutController_1.getWorkoutNameByID)(Number(workout["workoutid"]));
             const exercises = yield getExercisesByDay(workout["workoutid"]);
             workout["exercises"] = yield Promise.all(exercises.map((exercise) => __awaiter(void 0, void 0, void 0, function* () {
@@ -54,7 +53,7 @@ exports.getAllPrograms = getAllPrograms;
 const createNewProgram = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // 1) First create workout program
     try {
-        const { programname, daysperweek, split, rating, plansAssociated } = req.body;
+        const { programname, daysperweek, split, rating } = req.body;
         let programid = yield getNewProgramID();
         let result = yield db.query("INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *", [programid, programname, daysperweek, split, rating]);
         const newProgram = result.rows[0];

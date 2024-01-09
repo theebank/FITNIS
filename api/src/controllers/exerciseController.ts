@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {} from "express";
 
 const db = require("../db");
 

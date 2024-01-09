@@ -48,8 +48,7 @@ export const getAllPrograms = async (req: Request, res: Response) => {
 export const createNewProgram = async (req: Request, res: Response) => {
   // 1) First create workout program
   try {
-    const { programname, daysperweek, split, rating, plansAssociated } =
-      req.body;
+    const { programname, daysperweek, split, rating } = req.body;
     let programid = await getNewProgramID();
     let result = await db.query(
       "INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",

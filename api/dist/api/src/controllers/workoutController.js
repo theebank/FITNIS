@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getWorkoutNameByID = exports.getAllWorkouts = exports.createNewWorkout = exports.getWorkoutByID = void 0;
 const exerciseController_1 = require("./exerciseController");
 const programExerciseController_1 = require("./programExerciseController");
-const db = require("../db");
+const db = __importStar(require("../db"));
 const getWorkoutByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let result = yield db.query("SELECT * FROM workouts where workoutid = $1", [
@@ -46,6 +69,7 @@ const createNewWorkout = (req, res) => __awaiter(void 0, void 0, void 0, functio
             // console.log(firstID, workoutid, exerciseid, sets, reps);
             try {
                 let result = yield db.query("INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ", [firstID, workoutid, exerciseid, sets, reps]);
+                console.log(result);
             }
             catch (error) {
                 console.error(error);

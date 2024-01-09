@@ -1,4 +1,4 @@
-const { Pool } = require("pg");
+import { Pool } from "pg";
 
 const pool = new Pool({
   user: "appdev",
@@ -8,6 +8,4 @@ const pool = new Pool({
   port: 5432,
 });
 
-module.exports = {
-  query: (text: any, params: any) => pool.query(text, params),
-};
+export const query = (text: any, params: any) => pool.query(text, params);

@@ -1,6 +1,6 @@
 export type exerciseType = {
-  name: String;
-  muscletype: String;
-  othermusclesworked: String[];
+  name: string;
+  muscletype: string;
+  othermusclesworked: string[];
   id: number;
 };
