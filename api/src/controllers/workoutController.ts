@@ -3,6 +3,7 @@ import { getExerciseDetailsByID } from "./exerciseController";
 import { getNewPExericseID } from "./programExerciseController";
 
 import { query } from "../db";
+import { exerciseType } from "../../../types/QueryReturnTypes";
 
 export const getWorkoutByID = async (req: Request, res: Response) => {
   try {
@@ -14,7 +15,7 @@ export const getWorkoutByID = async (req: Request, res: Response) => {
       Number(req.params.workoutId)
     );
     workout["exercises"] = await Promise.all(
-      workout["exercises"].map(async (exercise: any) => {
+      workout["exercises"].map(async (exercise: exerciseType) => {
         const exerciseDetails = await getExerciseDetailsByID(
           exercise["exerciseid"]
         );
@@ -37,7 +38,7 @@ export const createNewWorkout = async (req: Request, res: Response) => {
       "INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *",
       [workoutid, programname]
     );
-    exercises.map(async (e: any) => {
+    exercises.map(async (e: exerciseType) => {
       firstID++;
       const exerciseid = e.exerciseid;
       const sets = 3;
@@ -65,10 +66,7 @@ export const createNewWorkout = async (req: Request, res: Response) => {
 
 export const getAllWorkouts = async (req: Request, res: Response) => {
   try {
-    const result = await query(
-      "SELECT * FROM workouts ORDER BY workoutid ASC",
-      null
-    );
+    const result = await query("SELECT * FROM workouts ORDER BY workoutid ASC");
     res.send(result.rows);
   } catch (error) {
     console.error("Error executing query", error);
@@ -78,7 +76,7 @@ export const getAllWorkouts = async (req: Request, res: Response) => {
 
 const getNewWorkoutID = async () => {
   try {
-    const result = await query("SELECT COUNT(*) FROM workouts", null);
+    const result = await query("SELECT COUNT(*) FROM workouts");
     const newID = Number(result.rows[0].count) + 1;
     return newID;
   } catch (error) {

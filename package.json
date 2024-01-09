@@ -10,7 +10,7 @@
     "start-api": "cd api && node dist/api/src/app.js",
     "build-api": "cd api && tsc",
     "api": "npm run build-api && npm run start-api",
-    "lint": "eslint '**/*.ts' --ignore-pattern node_modules/"
+    "lint": "eslint '**/*.ts' --fix --ignore-pattern node_modules/"
   },
   "repository": {
     "type": "git",

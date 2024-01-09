@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllExerciseTypes = exports.getAllExercises = exports.getExerciseDetailsByID = exports.getExerciseByID = void 0;
-const db = require("../db");
+const db_1 = require("../db");
 const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const exercise = yield (0, exports.getExerciseDetailsByID)(Number(req.params.exerciseId));
@@ -24,7 +24,7 @@ const getExerciseByID = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.getExerciseByID = getExerciseByID;
 const getExerciseDetailsByID = (workoutId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield db.query("SELECT * FROM exercises where exerciseid = $1", [workoutId]);
+        const result = yield (0, db_1.query)("SELECT * FROM exercises where exerciseid = $1", [workoutId]);
         return result.rows[0];
     }
     catch (error) {
@@ -35,7 +35,7 @@ const getExerciseDetailsByID = (workoutId) => __awaiter(void 0, void 0, void 0, 
 exports.getExerciseDetailsByID = getExerciseDetailsByID;
 const getAllExercises = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield db.query("SELECT * FROM exercises");
+        const result = yield (0, db_1.query)("SELECT * FROM exercises");
         res.send(result.rows);
     }
     catch (error) {
@@ -46,10 +46,10 @@ const getAllExercises = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.getAllExercises = getAllExercises;
 const getAllExerciseTypes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        var result = yield db.query("SELECT muscletype FROM exercises UNION SELECT UNNEST(othermusclesworked) FROM exercises");
-        result = result.rows.filter((e) => e.muscletype !== "");
-        result = result.map((e) => e.muscletype);
-        res.send(result);
+        const result = yield (0, db_1.query)("SELECT muscletype FROM exercises UNION SELECT UNNEST(othermusclesworked) FROM exercises");
+        let rows = result.rows.filter((exercise) => exercise.muscletype !== "");
+        rows = rows.map((exercise) => exercise.muscletype);
+        res.send(rows);
     }
     catch (error) {
         console.error("Error executing query", error);
