@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-const programController = require("../controllers/programController");
+import * as programController from "../controllers/programController";
 
 // Base end point is /api/programs
 router.get("/id/:programId", programController.getProgramByID);

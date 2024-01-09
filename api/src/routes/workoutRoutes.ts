@@ -1,7 +1,7 @@
 import express from "express";
-const router = express.Router();
+import * as workoutController from "../controllers/workoutController";
 
-const workoutController = require("../controllers/workoutController");
+const router = express.Router();
 
 // Base end point is /api/workouts
 router.get("/all", workoutController.getAllWorkouts);

@@ -1,5 +1,3 @@
-import { StyleSheet } from "react-native";
-
 const WMstyles = {
   backgroundContainer: {
     backgroundColor: "#ffffff",

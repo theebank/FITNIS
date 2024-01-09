@@ -1,6 +1,6 @@
 import { exerciseType } from "../types/Exercise";
 
-export var TestExercises: exerciseType[] = [
+export const TestExercises: exerciseType[] = [
   {
     id: 1,
     name: "Bench Press",

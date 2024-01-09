@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
-const db = require("../db");
+import { query } from "../db";
+import { exerciseType } from "../../../types/QueryReturnTypes";
 
 export const getExerciseByID = async (req: Request, res: Response) => {
   try {
@@ -16,7 +17,7 @@ export const getExerciseByID = async (req: Request, res: Response) => {
 
 export const getExerciseDetailsByID = async (workoutId: number) => {
   try {
-    const result = await db.query(
+    const result = await query(
       "SELECT * FROM exercises where exerciseid = $1",
       [workoutId]
     );
@@ -28,7 +29,7 @@ export const getExerciseDetailsByID = async (workoutId: number) => {
 };
 export const getAllExercises = async (req: Request, res: Response) => {
   try {
-    const result = await db.query("SELECT * FROM exercises");
+    const result = await query("SELECT * FROM exercises");
     res.send(result.rows);
   } catch (error) {
     console.error("Error executing query", error);
@@ -37,12 +38,14 @@ export const getAllExercises = async (req: Request, res: Response) => {
 };
 export const getAllExerciseTypes = async (req: Request, res: Response) => {
   try {
-    var result = await db.query(
+    const result = await query(
       "SELECT muscletype FROM exercises UNION SELECT UNNEST(othermusclesworked) FROM exercises"
     );
-    result = result.rows.filter((e: any) => e.muscletype !== "");
-    result = result.map((e: any) => e.muscletype);
-    res.send(result);
+    let rows = result.rows.filter(
+      (exercise: exerciseType) => exercise.muscletype !== ""
+    );
+    rows = rows.map((exercise: exerciseType) => exercise.muscletype);
+    res.send(rows);
   } catch (error) {
     console.error("Error executing query", error);
     res.status(500).send("Internal server error");

@@ -3,23 +3,24 @@ import { TestData } from "../../../client/constants/TestWorkouts";
 import { getExerciseDetailsByID } from "./exerciseController";
 import { getWorkoutNameByID } from "./workoutController";
 
-const db = require("../db");
+import { exerciseType, workoutType } from "../../../types/QueryReturnTypes";
+import { query } from "../db";
 
 export const getProgramByID = async (req: Request, res: Response) => {
   try {
-    let result = await db.query("SELECT * FROM programs where programid = $1", [
+    const result = await query("SELECT * FROM programs where programid = $1", [
       req.params.programId,
     ]);
-    let program = result.rows[0];
+    const program = result.rows[0];
     program["workouts"] = await getWorkouts(Number(req.params.programId));
     program["workouts"] = await Promise.all(
-      program["workouts"].map(async (workout: any) => {
+      program["workouts"].map(async (workout: workoutType) => {
         workout["workoutname"] = await getWorkoutNameByID(
           Number(workout["workoutid"])
         );
         const exercises = await getExercisesByDay(workout["workoutid"]);
         workout["exercises"] = await Promise.all(
-          exercises.map(async (exercise: any) => {
+          exercises.map(async (exercise: exerciseType) => {
             const exerciseDetails = await getExerciseDetailsByID(
               exercise["exerciseid"]
             );
@@ -37,8 +38,8 @@ export const getProgramByID = async (req: Request, res: Response) => {
 };
 export const getAllPrograms = async (req: Request, res: Response) => {
   try {
-    let result = await db.query("SELECT * FROM programs");
-    let programs = result.rows;
+    const result = await query("SELECT * FROM programs");
+    const programs = result.rows;
     res.send(programs);
   } catch (error) {
     console.error("Error executing query", error);
@@ -48,10 +49,9 @@ export const getAllPrograms = async (req: Request, res: Response) => {
 export const createNewProgram = async (req: Request, res: Response) => {
   // 1) First create workout program
   try {
-    const { programname, daysperweek, split, rating, plansAssociated } =
-      req.body;
-    let programid = await getNewProgramID();
-    let result = await db.query(
+    const { programname, daysperweek, split, rating } = req.body;
+    const programid = await getNewProgramID();
+    const result = await query(
       "INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [programid, programname, daysperweek, split, rating]
     );
@@ -68,7 +68,7 @@ export const createNewProgram = async (req: Request, res: Response) => {
 };
 
 export const getWorkoutsByUID = (req: Request, res: Response) => {
-  let test = [1, 4, 6, 8];
+  const test = [1, 4, 6, 8];
   const workouts = TestData.filter((e) => {
     if (test.find((id) => id === e.id)) {
       return true;
@@ -79,8 +79,8 @@ export const getWorkoutsByUID = (req: Request, res: Response) => {
 
 const getNewProgramID = async () => {
   try {
-    let result = await db.query("SELECT * FROM programs");
-    let newID = result.rows.length + 1;
+    const result = await query("SELECT * FROM programs");
+    const newID = result.rows.length + 1;
     return newID;
   } catch (error) {
     console.error(error);
@@ -90,7 +90,7 @@ const getNewProgramID = async () => {
 
 const getWorkouts = async (programID: number) => {
   try {
-    let result = await db.query(
+    const result = await query(
       "SELECT * FROM workoutprograms where programid = $1",
       [programID]
     );
@@ -102,7 +102,7 @@ const getWorkouts = async (programID: number) => {
 };
 const getExercisesByDay = async (workoutId: number) => {
   try {
-    let result = await db.query(
+    const result = await query(
       "SELECT * FROM programexercises WHERE workoutid = $1",
       [workoutId]
     );

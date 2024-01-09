@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getNewPExericseID = void 0;
-const db = require("../db");
+const db_1 = require("../db");
 const getNewPExericseID = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let result = yield db.query("SELECT COUNT(*) from programexercises");
+        const result = yield (0, db_1.query)("SELECT COUNT(*) from programexercises");
         return Number(result.rows[0].count) + 1;
     }
     catch (error) {

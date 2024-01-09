@@ -1,4 +1,4 @@
-export var TestData = [
+export const TestData = [
   {
     id: 1,
     ProgramName: "Jeff Nippard PPL",
