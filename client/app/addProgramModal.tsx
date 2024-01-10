@@ -29,7 +29,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
   useLayoutEffect(() => {
     navigation.setOptions({ title: "Create Workout Program" });
   }, []);
-  var plansAssociated: any[] = [];
+  var plansAssociated: number[] = [];
 
   const WorkoutDetails = ({
     onTextChange,

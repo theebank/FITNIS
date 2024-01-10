@@ -43,13 +43,11 @@ export const createNewWorkout = async (req: Request, res: Response) => {
       const exerciseid = e.exerciseid;
       const sets = 3;
       const reps = "6-8";
-      // console.log(firstID, workoutid, exerciseid, sets, reps);
       try {
-        const result = await query(
+        await query(
           "INSERT INTO programexercises (programexerciseid, workoutid, exerciseid, sets, reps) VALUES ($1, $2, $3, $4, $5) RETURNING * ",
           [firstID, workoutid, exerciseid, sets, reps]
         );
-        console.log(result);
       } catch (error) {
         console.error(error);
         throw error;

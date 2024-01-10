@@ -49,21 +49,32 @@ export const getAllPrograms = async (req: Request, res: Response) => {
 export const createNewProgram = async (req: Request, res: Response) => {
   // 1) First create workout program
   try {
-    const { programname, daysperweek, split, rating } = req.body;
+    const { programname, daysperweek, split, rating, plansAssociated } =
+      req.body;
     const programid = await getNewProgramID();
     const result = await query(
       "INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [programid, programname, daysperweek, split, rating]
     );
     const newProgram = result.rows[0];
-    // 2) Map through workouts and create association between them
-
+    // 2) Map through workoutplans and create association between them
+    plansAssociated.map(async (workoutid: number) => {
+      try {
+        await query(
+          "INSERT INTO workoutprograms (workoutid, programid) VALUES ($1, $2) RETURNING * ",
+          [workoutid, programid]
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    });
+    // End of 2
     res.status(201).send(newProgram);
   } catch (error) {
     console.error("Error executing query", error);
     res.status(500).send("Internal server error");
   }
-
   // 3) Should only be sending: Workout program details (name, daysperweek, etc) and [workoutprogramids]
 };
 
