@@ -10,6 +10,27 @@ on:
   workflow_call:
 
 jobs:
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v2
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 18
+      
+      - name: "Install npm@latest"
+        run: npm i -g npm@latest
+      
+      - name: "Install dependencies"
+        uses: bahmutov/npm-install@v1
+
+      - name: "Run tests"
+        uses: npm run test --if-present
   lint:
     name: Code Standards
     runs-on: ubuntu-latest
@@ -31,4 +52,5 @@ jobs:
 
       - name: "lint code"
         run: npm run lint --if-present
+    
       
