@@ -53,7 +53,7 @@ export const createNewWorkout = async (req: Request, res: Response) => {
         throw error;
       }
     });
-
+    var test = "";
     const newWorkout = result.rows[0];
     res.status(201).send(newWorkout);
   } catch (error) {
