@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "ios": "cd client && expo start --ios",
     "android": "cd client && expo start --android",
     "start-api": "cd api && node dist/api/src/app.js",
