@@ -14,6 +14,7 @@ const TestWorkouts_1 = require("../../../client/constants/TestWorkouts");
 const exerciseController_1 = require("./exerciseController");
 const workoutController_1 = require("./workoutController");
 const db_1 = require("../db");
+const DBHelpers_1 = require("../helpers/DBHelpers");
 const getProgramByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, db_1.query)("SELECT * FROM programs where programid = $1", [
@@ -53,11 +54,22 @@ exports.getAllPrograms = getAllPrograms;
 const createNewProgram = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // 1) First create workout program
     try {
-        const { programname, daysperweek, split, rating } = req.body;
-        const programid = yield getNewProgramID();
+        const { programname, daysperweek, split, rating, plansAssociated } = req.body;
+        const programid = yield (0, DBHelpers_1.getNewID)("programs");
+        console.log(programid);
         const result = yield (0, db_1.query)("INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *", [programid, programname, daysperweek, split, rating]);
         const newProgram = result.rows[0];
-        // 2) Map through workouts and create association between them
+        // 2) Map through workoutplans and create association between them
+        plansAssociated.map((workoutid) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                yield (0, db_1.query)("INSERT INTO workoutprograms (workoutid, programid) VALUES ($1, $2) RETURNING * ", [workoutid, programid]);
+            }
+            catch (error) {
+                console.error(error);
+                throw error;
+            }
+        }));
+        // End of 2
         res.status(201).send(newProgram);
     }
     catch (error) {
@@ -77,17 +89,6 @@ const getWorkoutsByUID = (req, res) => {
     res.send(workouts);
 };
 exports.getWorkoutsByUID = getWorkoutsByUID;
-const getNewProgramID = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield (0, db_1.query)("SELECT * FROM programs");
-        const newID = result.rows.length + 1;
-        return newID;
-    }
-    catch (error) {
-        console.error(error);
-        throw error;
-    }
-});
 const getWorkouts = (programID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, db_1.query)("SELECT * FROM workoutprograms where programid = $1", [programID]);

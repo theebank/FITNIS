@@ -19,7 +19,7 @@ import { Card, FAB } from "react-native-paper";
 import Constants from "expo-constants";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
-  let apiUrl = Constants.expoConfig?.extra?.API_URL;
+  const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [wRoutines, setWRoutines] = useState<any>(null);
   const navigation = useNavigation();
 

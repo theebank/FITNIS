@@ -17,19 +17,19 @@ import RenderExercise from "../components/Program/RenderExercise/RenderExercise"
 import axios from "axios";
 import Constants from "expo-constants";
 
-let apiUrl = Constants.expoConfig?.extra?.API_URL;
+const apiUrl = Constants.expoConfig?.extra?.API_URL;
 const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
   const [workoutDay, setWorkoutDay] = useState(1);
   const [workoutDays, setworkoutDays] = useState("0");
   // var workoutplan: exerciseType[][] = [];
   const navigation = useNavigation();
   // const [workoutNameInput, setWorkoutNameInput] = useState("");
-  var workoutNameInput = "";
+  let workoutNameInput = "";
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: "Create Workout Program" });
   }, []);
-  var plansAssociated: number[] = [];
+  const plansAssociated: number[] = [];
 
   const WorkoutDetails = ({
     onTextChange,
@@ -77,7 +77,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
   const CreateWorkoutButton = () => {
     const createWorkout = async () => {
       const createProgram = async () => {
-        let data = {
+        const data = {
           programname: workoutNameInput,
           daysperweek: plansAssociated.length,
           split: "PPL",
@@ -85,7 +85,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
           plansAssociated: plansAssociated,
         };
         try {
-          let response = await axios.post(
+          const response = await axios.post(
             `${apiUrl}/programs/newProgram`,
             data
           );

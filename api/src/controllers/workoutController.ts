@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { getExerciseDetailsByID } from "./exerciseController";
-import { getNewPExericseID } from "./programExerciseController";
 
 import { query } from "../db";
 import { exerciseType } from "../../../types/QueryReturnTypes";
+import { getNewID } from "../helpers/DBHelpers";
 
 export const getWorkoutByID = async (req: Request, res: Response) => {
   try {
@@ -31,8 +31,8 @@ export const getWorkoutByID = async (req: Request, res: Response) => {
 export const createNewWorkout = async (req: Request, res: Response) => {
   try {
     const { programname, exercises } = req.body;
-    const workoutid = await getNewWorkoutID();
-    let firstID = await getNewPExericseID();
+    const workoutid = await getNewID("workouts");
+    let firstID = await getNewID("programexercises");
 
     const result = await query(
       "INSERT INTO workouts (workoutid, workoutname) VALUES ($1, $2) RETURNING *",
@@ -68,17 +68,6 @@ export const getAllWorkouts = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error executing query", error);
     res.status(500).send("Internal server error");
-  }
-};
-
-const getNewWorkoutID = async () => {
-  try {
-    const result = await query("SELECT COUNT(*) FROM workouts");
-    const newID = Number(result.rows[0].count) + 1;
-    return newID;
-  } catch (error) {
-    console.error(error);
-    throw error;
   }
 };
 

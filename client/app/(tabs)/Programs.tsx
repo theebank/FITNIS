@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Pressable, View } from "react-native";
 import Program from "../../components/Program/Program";
 import WPPstyles from "../../styles/WorkoutPlanPageStyling";
 import { FAB } from "react-native-paper";
-import { Link } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import axios from "axios";
 import Constants from "expo-constants";
 
 const Plans = () => {
-  let apiUrl = Constants.expoConfig?.extra?.API_URL;
+  const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [programs, setPrograms] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchWorkoutPlans = async () => {
-      const response = await axios.get(`${apiUrl}/programs/all`);
-      setPrograms(response.data);
-    };
-    fetchWorkoutPlans();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchWorkoutPlans = async () => {
+        const response = await axios.get(`${apiUrl}/programs/all`);
+        setPrograms(response.data);
+      };
+      fetchWorkoutPlans();
+    }, [apiUrl])
+  );
 
   function addPlan(PName: string, Days: number, Split: string, Rate: number) {
-    let i = {
+    const i = {
       id: programs[programs.length - 1].id + 1,
       ProgramName: PName,
       DaysPerWeek: Days,
@@ -35,8 +37,8 @@ const Plans = () => {
     Split: string,
     Rate: number
   ) {
-    let temp = [...programs];
-    let x = programs.findIndex(
+    const temp = [...programs];
+    const x = programs.findIndex(
       (element: {
         programname: string;
         daysperweek: number;

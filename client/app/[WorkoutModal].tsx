@@ -8,7 +8,7 @@ import axios from "axios";
 import Constants from "expo-constants";
 
 const index = () => {
-  let apiUrl = Constants.expoConfig?.extra?.API_URL;
+  const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const navigation = useNavigation();
   const { ProgramName, DaysPerWeek, Split, ProgramID } = useLocalSearchParams();
   const [programDetails, setProgramDetails] = useState<any>(null);

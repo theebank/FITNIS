@@ -5,6 +5,7 @@ import { getWorkoutNameByID } from "./workoutController";
 
 import { exerciseType, workoutType } from "../../../types/QueryReturnTypes";
 import { query } from "../db";
+import { getNewID } from "../helpers/DBHelpers";
 
 export const getProgramByID = async (req: Request, res: Response) => {
   try {
@@ -51,7 +52,8 @@ export const createNewProgram = async (req: Request, res: Response) => {
   try {
     const { programname, daysperweek, split, rating, plansAssociated } =
       req.body;
-    const programid = await getNewProgramID();
+    const programid = await getNewID("programs");
+    console.log(programid);
     const result = await query(
       "INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [programid, programname, daysperweek, split, rating]
@@ -86,17 +88,6 @@ export const getWorkoutsByUID = (req: Request, res: Response) => {
     }
   });
   res.send(workouts);
-};
-
-const getNewProgramID = async () => {
-  try {
-    const result = await query("SELECT * FROM programs");
-    const newID = result.rows.length + 1;
-    return newID;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 const getWorkouts = async (programID: number) => {

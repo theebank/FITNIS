@@ -16,7 +16,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import Constants from "expo-constants";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
-  let apiUrl = Constants.expoConfig?.extra?.API_URL;
+  const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [exercises, setExercises] = useState<any>(null);
   const [exercisesByMG, setExercisesByMG] = useState<any>(null);
   const [exerciseTypes, setExerciseTypes] = useState<any>(null);
@@ -69,9 +69,9 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     ]);
   };
   const createWorkout = async () => {
-    let data = { programname: "Test", exercises: workoutCart };
+    const data = { programname: "Test", exercises: workoutCart };
     try {
-      let wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
+      const wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
       workoutCart.map((e: any) => {});
     } catch (error) {
       console.error("Error creating new workout: ", error);
