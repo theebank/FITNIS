@@ -3,18 +3,15 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Card, DataTable } from "react-native-paper";
 import PWDstyles from "./ProgramWorkoutDayStyling";
-
-interface ProgramWorkoutDayProps {
-  Workout: any;
-  index: number;
-}
+import { workoutType } from "../../../../types/DatabaseTypes";
+import WorkoutDetailsRendering from "./WorkoutDetailsRendering/WorkoutDetailsRendering";
 
 const ProgramWorkoutDay = ({
   Workout,
   index,
 }: {
-  Workout: any;
-  index: any;
+  Workout: workoutType;
+  index: number;
 }) => {
   const DataTableHeaders = () => {
     return (
@@ -28,23 +25,8 @@ const ProgramWorkoutDay = ({
     );
   };
 
-  const WorkoutDetailsRendering = ({
-    Workout,
-    index,
-  }: ProgramWorkoutDayProps) => {
-    return Workout.exercises.map((e: any) => (
-      <DataTable.Row key={"" + index + e.exercisename}>
-        <DataTable.Cell style={{ flex: 3, flexWrap: "wrap" }}>
-          <Text ellipsizeMode="tail">{e.exercisename}</Text>
-        </DataTable.Cell>
-        <DataTable.Cell numeric>{e.sets}</DataTable.Cell>
-        <DataTable.Cell numeric>{e.reps}</DataTable.Cell>
-      </DataTable.Row>
-    ));
-  };
-
   const [clicked, setClicked] = useState(false);
-  if (Workout.exercises.length > 0) {
+  if (Workout.exercises && Workout.exercises.length > 0) {
     return (
       <View key={index} style={PWDstyles.outercontainerView}>
         <Card>

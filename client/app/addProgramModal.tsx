@@ -1,29 +1,14 @@
-import {
-  Button,
-  FlatList,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Button, Text, TextInput, View } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import SelectDropdown from "react-native-select-dropdown";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Card } from "react-native-paper";
-import { Entypo, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import { exerciseType } from "../types/Exercise";
-import RenderExercise from "../components/Program/RenderExercise/RenderExercise";
 import axios from "axios";
 import Constants from "expo-constants";
 
 const apiUrl = Constants.expoConfig?.extra?.API_URL;
 const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
-  const [workoutDay, setWorkoutDay] = useState(1);
-  const [workoutDays, setworkoutDays] = useState("0");
-  // var workoutplan: exerciseType[][] = [];
   const navigation = useNavigation();
-  // const [workoutNameInput, setWorkoutNameInput] = useState("");
   let workoutNameInput = "";
 
   useLayoutEffect(() => {

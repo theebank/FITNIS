@@ -2,16 +2,7 @@ import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { Link, useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  Pressable,
-  Button,
-} from "react-native";
-import { Card, FAB } from "react-native-paper";
+import { View, Text, Pressable, Button } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import Constants from "expo-constants";
 
@@ -72,7 +63,8 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     const data = { programname: "Test", exercises: workoutCart };
     try {
       const wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
-      workoutCart.map((e: any) => {});
+      // workoutCart.map((e: any) => {});
+      console.log(wResponse);
     } catch (error) {
       console.error("Error creating new workout: ", error);
     }

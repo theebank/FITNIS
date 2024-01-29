@@ -3,7 +3,7 @@ import { TestData } from "../../../client/constants/TestWorkouts";
 import { getExerciseDetailsByID } from "./exerciseController";
 import { getWorkoutNameByID } from "./workoutController";
 
-import { exerciseType, workoutType } from "../../../types/QueryReturnTypes";
+import { exerciseType, workoutType } from "../../../types/DatabaseTypes";
 import { query } from "../db";
 import { getNewID } from "../helpers/DBHelpers";
 

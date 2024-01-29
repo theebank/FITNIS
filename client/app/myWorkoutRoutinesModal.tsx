@@ -10,7 +10,6 @@ import React, {
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   ActivityIndicator,
   Pressable,
@@ -70,7 +69,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
         {workoutdetails?.exercises.length > 0 ? (
           <Card.Title
             title={item.workoutname}
-            right={(props) =>
+            right={() =>
               clicked ? (
                 <Entypo
                   name="chevron-down"
@@ -120,7 +119,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
         <FlatList
           data={wRoutines}
           keyExtractor={(item) => item.workoutid.toString()}
-          renderItem={({ item, index }) => <RoutineRender item={item} />}
+          renderItem={({ item }) => <RoutineRender item={item} />}
         ></FlatList>
       ) : (
         <View style={{ flex: 1, justifyContent: "center" }}>

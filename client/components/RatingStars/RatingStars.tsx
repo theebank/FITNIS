@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { View } from "react-native";
 
-const Ratingstars = (Rating: number) => {
+const Ratingstars = ({ Rating }: { Rating: number }) => {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     if (i <= Rating) {

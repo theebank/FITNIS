@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, Pressable, View } from "react-native";
 import Program from "../../components/Program/Program";
 import WPPstyles from "../../styles/WorkoutPlanPageStyling";
@@ -21,16 +21,6 @@ const Plans = () => {
     }, [apiUrl])
   );
 
-  function addPlan(PName: string, Days: number, Split: string, Rate: number) {
-    const i = {
-      id: programs[programs.length - 1].id + 1,
-      ProgramName: PName,
-      DaysPerWeek: Days,
-      Split: Split,
-      Rating: Rate,
-    };
-    setPrograms((programs: any) => [...programs, i]);
-  }
   function removePlan(
     PName: string,
     Days: number,

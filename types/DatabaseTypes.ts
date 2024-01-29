@@ -2,7 +2,7 @@ export type exerciseType = {
   exerciseid: number;
   exercisename: string;
   muscletype: string;
-  othermusclesworked: string;
+  othermusclesworked: string[];
 };
 export type programexercisesType = {
   programexerciseid: number;
@@ -11,17 +11,23 @@ export type programexercisesType = {
   sets: number;
   reps: string;
 };
+export type combinedExerciseProgramType = exerciseType & programexercisesType;
 export type programType = {
   programid: number;
   programname: string;
   daysperweek: number;
   split: string;
   rating: number;
+  workouts?: workoutType[];
 };
 export type workoutType = {
   workoutid: number;
   workoutname: string;
-  exercises?: exerciseType[];
+  programid?: number;
+  exercises?:
+    | exerciseType[]
+    | programexercisesType[]
+    | combinedExerciseProgramType[];
 };
 export type workoutprogramType = {
   workoutid: number;
