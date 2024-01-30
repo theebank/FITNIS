@@ -10,5 +10,14 @@
   "rules": {
     "no-unused-vars": "error",
     "@typescript-eslint/no-unused-vars": ["error"]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.tsx"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+      ]
+    }
+  ]
 }

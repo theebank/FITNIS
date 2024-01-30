@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { query } from "../db";
-import { exerciseType } from "../../../types/QueryReturnTypes";
+import { exerciseType } from "../../../types/DatabaseTypes";
 
 export const getExerciseByID = async (req: Request, res: Response) => {
   try {

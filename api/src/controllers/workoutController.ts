@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getExerciseDetailsByID } from "./exerciseController";
 
 import { query } from "../db";
-import { exerciseType } from "../../../types/QueryReturnTypes";
+import { exerciseType } from "../../../types/DatabaseTypes";
 import { getNewID } from "../helpers/DBHelpers";
 
 export const getWorkoutByID = async (req: Request, res: Response) => {

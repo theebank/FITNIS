@@ -2,26 +2,20 @@ import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { Link, useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  Pressable,
-  Button,
-} from "react-native";
-import { Card, FAB } from "react-native-paper";
+import { View, Text, Pressable, Button } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import Constants from "expo-constants";
+import { exerciseType } from "../../types/DatabaseTypes";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
   const apiUrl = Constants.expoConfig?.extra?.API_URL;
-  const [exercises, setExercises] = useState<any>(null);
-  const [exercisesByMG, setExercisesByMG] = useState<any>(null);
-  const [exerciseTypes, setExerciseTypes] = useState<any>(null);
+  const [exercises, setExercises] = useState<exerciseType[]>([]);
+  const [exercisesByMG, setExercisesByMG] = useState<exerciseType[] | null>(
+    null
+  );
+  const [exerciseTypes, setExerciseTypes] = useState<string[]>([]);
 
-  const [workoutCart, setWorkoutCart] = useState<any>([]);
+  const [workoutCart, setWorkoutCart] = useState<exerciseType[]>([]);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -53,7 +47,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
   }, [navigation]);
 
   const filterExercises = (muscletype: string) => {
-    return exercises?.filter((e: any) => {
+    return exercises?.filter((e: exerciseType) => {
       if (e.muscletype == muscletype) {
         return true;
       }
@@ -63,16 +57,19 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     });
   };
   const addtoCart = (eID: number) => {
-    setWorkoutCart([
-      ...workoutCart,
-      exercises.find((e: any) => e.exerciseid === eID),
-    ]);
+    let foundExercise = exercises?.find(
+      (e: exerciseType) => e.exerciseid == eID
+    );
+    if (foundExercise) {
+      setWorkoutCart([...workoutCart, foundExercise]);
+    }
   };
   const createWorkout = async () => {
     const data = { programname: "Test", exercises: workoutCart };
     try {
       const wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
-      workoutCart.map((e: any) => {});
+      // workoutCart.map((e: any) => {});
+      console.log(wResponse);
     } catch (error) {
       console.error("Error creating new workout: ", error);
     }
@@ -105,7 +102,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
           );
         }}
       />
-      {exercisesByMG?.map((e: any) => {
+      {exercisesByMG?.map((e: exerciseType) => {
         return (
           <Pressable
             onPress={() => {
@@ -115,7 +112,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
             <View style={{ display: "flex", flexDirection: "row" }}>
               <Text>{e.exercisename}</Text>
               <Text>{e.muscletype}</Text>
-              {e.othermusclesworked.map((i: any) => {
+              {e.othermusclesworked.map((i: string) => {
                 return <Text>{i}</Text>;
               })}
             </View>
@@ -124,7 +121,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
       })}
       <Text>-----------------------</Text>
       <View>
-        {workoutCart?.map((e: any) => {
+        {workoutCart?.map((e: exerciseType) => {
           return (
             <View
               style={{
