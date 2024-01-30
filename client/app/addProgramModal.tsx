@@ -5,9 +5,14 @@ import { Card } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import axios from "axios";
 import Constants from "expo-constants";
+import { workoutType } from "../../types/DatabaseTypes";
 
 const apiUrl = Constants.expoConfig?.extra?.API_URL;
-const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
+const AddWorkoutModalRender = ({
+  workoutPlans,
+}: {
+  workoutPlans: workoutType[] | null;
+}) => {
   const navigation = useNavigation();
   let workoutNameInput = "";
 
@@ -44,7 +49,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
     return (
       <Card>
         <Card.Content>
-          {workoutPlans?.map((e: any) => {
+          {workoutPlans?.map((e: workoutType) => {
             return (
               <View>
                 <Text>{e.workoutname}</Text>
@@ -103,7 +108,7 @@ const AddWorkoutModalRender = ({ workoutPlans }: { workoutPlans: any }) => {
 };
 
 const addWorkoutModal = () => {
-  const [workoutPlans, setWorkoutPlans] = useState<any>(null);
+  const [workoutPlans, setWorkoutPlans] = useState<workoutType[] | null>(null);
   useEffect(() => {
     const fetchPlans = async () => {
       const response = await axios.get(`${apiUrl}/workouts/all`);

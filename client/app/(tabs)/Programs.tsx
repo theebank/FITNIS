@@ -6,10 +6,11 @@ import { FAB } from "react-native-paper";
 import { Link, useFocusEffect } from "expo-router";
 import axios from "axios";
 import Constants from "expo-constants";
+import { programType } from "../../../types/DatabaseTypes";
 
 const Plans = () => {
   const apiUrl = Constants.expoConfig?.extra?.API_URL;
-  const [programs, setPrograms] = useState<any>(null);
+  const [programs, setPrograms] = useState<programType[] | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -27,21 +28,23 @@ const Plans = () => {
     Split: string,
     Rate: number
   ) {
-    const temp = [...programs];
-    const x = programs.findIndex(
-      (element: {
-        programname: string;
-        daysperweek: number;
-        split: string;
-        rating: number;
-      }) =>
-        element.programname === PName &&
-        element.daysperweek === Days &&
-        element.split === Split &&
-        element.rating === Rate
-    );
-    temp.splice(x, 1);
-    setPrograms(temp);
+    if (programs != null && programs.length > 0) {
+      const temp = [...programs];
+      const x = programs.findIndex(
+        (element: {
+          programname: string;
+          daysperweek: number;
+          split: string;
+          rating: number;
+        }) =>
+          element.programname === PName &&
+          element.daysperweek === Days &&
+          element.split === Split &&
+          element.rating === Rate
+      );
+      temp.splice(x, 1);
+      setPrograms(temp);
+    }
   }
 
   return (
