@@ -1,11 +1,12 @@
-import { Button, Text, TextInput, View } from "react-native";
+import { Button, ScrollView, Text, TextInput, View } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Card } from "react-native-paper";
-import { useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import axios from "axios";
 import Constants from "expo-constants";
 import { workoutType } from "../../types/DatabaseTypes";
+import RenderWorkoutPrograms from "../components/Program/createProgram/RenderWorkoutPrograms/RenderWorkoutPrograms";
 
 const apiUrl = Constants.expoConfig?.extra?.API_URL;
 const AddWorkoutModalRender = ({
@@ -17,9 +18,15 @@ const AddWorkoutModalRender = ({
   let workoutNameInput = "";
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: "Create Workout Program" });
+    navigation.setOptions({
+      title: "Create Workout Program",
+      headerStyle: {
+        backgroundColor: "#3d5a80",
+      },
+      headerTintColor: "#ffffff",
+    });
   }, []);
-  const plansAssociated: number[] = [];
+  const [plansAssociated, setPlansAssociated] = useState<number[]>([]);
 
   const WorkoutDetails = ({
     onTextChange,
@@ -33,7 +40,8 @@ const AddWorkoutModalRender = ({
       onTextChange(newText);
     };
     return (
-      <Card>
+      <Card style={{ margin: 5 }}>
+        <Card.Title title="Workout Name" />
         <Card.Content>
           <TextInput
             style={{ height: 40 }}
@@ -45,53 +53,51 @@ const AddWorkoutModalRender = ({
       </Card>
     );
   };
-  const RenderWorkoutPrograms = () => {
+
+  const RenderWorkoutCart = () => {
     return (
-      <Card>
+      <Card style={{ margin: 5 }}>
+        <Card.Title title="Routine(s) added" />
         <Card.Content>
-          {workoutPlans?.map((e: workoutType) => {
+          {plansAssociated.map((e, key) => {
             return (
-              <View>
-                <Text>{e.workoutname}</Text>
-                <Button
-                  onPress={() => plansAssociated.push(e.workoutid)}
-                  title="+"
-                ></Button>
-              </View>
+              <Text key={key}>
+                {workoutPlans?.find((p) => p.workoutid == e)?.workoutname}
+              </Text>
             );
           })}
         </Card.Content>
       </Card>
     );
   };
-  const CreateWorkoutButton = () => {
-    const createWorkout = async () => {
-      const createProgram = async () => {
-        const data = {
-          programname: workoutNameInput,
-          daysperweek: plansAssociated.length,
-          split: "PPL",
-          rating: 0,
-          plansAssociated: plansAssociated,
-        };
-        try {
-          const response = await axios.post(
-            `${apiUrl}/programs/newProgram`,
-            data
-          );
-          console.log("New program successfully created: ", response.data);
-        } catch (error) {
-          console.error("Error creating new program: ", error);
-        }
+
+  const CreateProgramButton = () => {
+    const createProgram = async () => {
+      const data = {
+        programname: workoutNameInput,
+        daysperweek: plansAssociated.length,
+        split: "PPL",
+        rating: 0,
+        plansAssociated: plansAssociated,
       };
-      createProgram();
+      console.log(data);
+      // try {
+      //   const response = await axios.post(
+      //     `${apiUrl}/programs/newProgram`,
+      //     data
+      //   );
+      //   console.log("New program successfully created: ", response.data);
+      // } catch (error) {
+      //   console.error("Error creating new program: ", error);
+      // }
     };
-    return <Button onPress={createWorkout} title="Create Workout" />;
+    return <Button onPress={() => createProgram()} title="Create Program" />;
   };
 
   const handleChildTextChange = (newText: string) => {
     workoutNameInput = newText;
   };
+  const formComplete = plansAssociated.length > 0 && workoutNameInput != "";
 
   return (
     <>
@@ -99,9 +105,15 @@ const AddWorkoutModalRender = ({
         <WorkoutDetails onTextChange={handleChildTextChange} />
         {/* Two options  */}
         {/* 1) Make association between workout programs and workout plans */}
-        <RenderWorkoutPrograms />
         {/* 2) Create workout program at the time of plan creation */}
-        <CreateWorkoutButton />
+        <RenderWorkoutPrograms
+          plansAssociated={plansAssociated}
+          setPlansAssociated={setPlansAssociated}
+          workoutPlans={workoutPlans}
+        />
+        {/* Render Workout Cart somehow */}
+        {plansAssociated.length > 0 && <RenderWorkoutCart />}
+        <CreateProgramButton />
       </View>
     </>
   );
