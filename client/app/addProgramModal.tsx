@@ -1,8 +1,8 @@
-import { Button, ScrollView, Text, TextInput, View } from "react-native";
+import { Button, Text, TextInput, View } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Card } from "react-native-paper";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import axios from "axios";
 import Constants from "expo-constants";
 import { workoutType } from "../../types/DatabaseTypes";
@@ -97,7 +97,7 @@ const AddWorkoutModalRender = ({
   const handleChildTextChange = (newText: string) => {
     workoutNameInput = newText;
   };
-  const formComplete = plansAssociated.length > 0 && workoutNameInput != "";
+  // const formComplete = plansAssociated.length > 0 && workoutNameInput != "";
 
   return (
     <>
