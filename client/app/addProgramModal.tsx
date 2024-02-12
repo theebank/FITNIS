@@ -81,16 +81,15 @@ const AddWorkoutModalRender = ({
         rating: 0,
         plansAssociated: plansAssociated,
       };
-      console.log(data);
-      // try {
-      //   const response = await axios.post(
-      //     `${apiUrl}/programs/newProgram`,
-      //     data
-      //   );
-      //   console.log("New program successfully created: ", response.data);
-      // } catch (error) {
-      //   console.error("Error creating new program: ", error);
-      // }
+      try {
+        const response = await axios.post(
+          `${apiUrl}/programs/newProgram`,
+          data
+        );
+        console.log("New program successfully created: ", response.data);
+      } catch (error) {
+        console.error("Error creating new program: ", error);
+      }
     };
     return <Button onPress={() => createProgram()} title="Create Program" />;
   };
