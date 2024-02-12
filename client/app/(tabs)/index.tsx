@@ -1,8 +1,8 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 
 import HPstyles from "../../styles/HomePageStyling";
 
-import { Text, View } from "../../components/Themed";
+import { View } from "../../components/Themed";
 import PlotGraph from "../../components/PlotGraph/PlotGraph";
 
 const WeightData = {

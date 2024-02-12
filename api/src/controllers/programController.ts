@@ -3,8 +3,9 @@ import { TestData } from "../../../client/constants/TestWorkouts";
 import { getExerciseDetailsByID } from "./exerciseController";
 import { getWorkoutNameByID } from "./workoutController";
 
-import { exerciseType, workoutType } from "../../../types/QueryReturnTypes";
+import { exerciseType, workoutType } from "../../../types/DatabaseTypes";
 import { query } from "../db";
+import { getNewID } from "../helpers/DBHelpers";
 
 export const getProgramByID = async (req: Request, res: Response) => {
   try {
@@ -49,21 +50,33 @@ export const getAllPrograms = async (req: Request, res: Response) => {
 export const createNewProgram = async (req: Request, res: Response) => {
   // 1) First create workout program
   try {
-    const { programname, daysperweek, split, rating } = req.body;
-    const programid = await getNewProgramID();
+    const { programname, daysperweek, split, rating, plansAssociated } =
+      req.body;
+    const programid = await getNewID("programs");
+    console.log(programid);
     const result = await query(
       "INSERT INTO programs (programid, programname, daysperweek, split, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [programid, programname, daysperweek, split, rating]
     );
     const newProgram = result.rows[0];
-    // 2) Map through workouts and create association between them
-
+    // 2) Map through workoutplans and create association between them
+    plansAssociated.map(async (workoutid: number) => {
+      try {
+        await query(
+          "INSERT INTO workoutprograms (workoutid, programid) VALUES ($1, $2) RETURNING * ",
+          [workoutid, programid]
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    });
+    // End of 2
     res.status(201).send(newProgram);
   } catch (error) {
     console.error("Error executing query", error);
     res.status(500).send("Internal server error");
   }
-
   // 3) Should only be sending: Workout program details (name, daysperweek, etc) and [workoutprogramids]
 };
 
@@ -75,17 +88,6 @@ export const getWorkoutsByUID = (req: Request, res: Response) => {
     }
   });
   res.send(workouts);
-};
-
-const getNewProgramID = async () => {
-  try {
-    const result = await query("SELECT * FROM programs");
-    const newID = result.rows.length + 1;
-    return newID;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 const getWorkouts = async (programID: number) => {

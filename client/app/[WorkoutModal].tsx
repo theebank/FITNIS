@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-paper";
@@ -6,12 +6,15 @@ import ProgramWorkoutDay from "../components/Program/ProgramWorkoutDay/ProgramWo
 import WMstyles from "../styles/WorkoutModalStyling";
 import axios from "axios";
 import Constants from "expo-constants";
+import { programType, workoutType } from "../../types/DatabaseTypes";
 
 const index = () => {
-  let apiUrl = Constants.expoConfig?.extra?.API_URL;
+  const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const navigation = useNavigation();
   const { ProgramName, DaysPerWeek, Split, ProgramID } = useLocalSearchParams();
-  const [programDetails, setProgramDetails] = useState<any>(null);
+  const [programDetails, setProgramDetails] = useState<programType | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchProgramDetails = async () => {
@@ -45,7 +48,7 @@ const index = () => {
       </Card>
       <ScrollView showsVerticalScrollIndicator={false}>
         {programDetails?.workouts &&
-          programDetails.workouts.map((i: any, key: string) => (
+          programDetails.workouts.map((i: workoutType, key: number) => (
             <ProgramWorkoutDay Workout={i} index={key} key={"PWD" + key} />
           ))}
       </ScrollView>

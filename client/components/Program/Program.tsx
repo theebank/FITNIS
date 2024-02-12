@@ -1,25 +1,24 @@
 import React from "react";
-import { Button, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { Card } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import Ratingstars from "../RatingStars/RatingStars";
 import Pstyles from "./ProgramStyling";
-
-type Query = {
-  WorkoutProgram: any;
-  ProgramID: any;
-};
+import { programType } from "../../../types/DatabaseTypes";
 
 const Program = ({
   ProgramDetails,
   removePlan,
-  index,
 }: {
-  ProgramDetails: any;
-  removePlan: Function;
-  index: any;
+  ProgramDetails: programType;
+  removePlan: (
+    PName: string,
+    Days: number,
+    Split: string,
+    Rate: number
+  ) => void;
 }) => {
   return (
     <View key={ProgramDetails.programid}>

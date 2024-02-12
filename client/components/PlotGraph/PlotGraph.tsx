@@ -2,6 +2,7 @@ import React from "react";
 import { Dimensions, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { Card } from "react-native-paper";
+import { PGDataType } from "../../../types/PlotGraphDataTypes";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -18,7 +19,7 @@ const chartConfig = {
   //   barPercentage: 0.5,
 };
 
-const PlotGraph = ({ title, data }: { title: string; data: any }) => {
+const PlotGraph = ({ title, data }: { title: string; data: PGDataType }) => {
   return (
     <View>
       <Card style={{ backgroundColor: "#ee6c4d" }}>
