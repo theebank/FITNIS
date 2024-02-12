@@ -1,6 +1,6 @@
 import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Card } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import axios from "axios";

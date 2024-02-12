@@ -57,7 +57,7 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     });
   };
   const addtoCart = (eID: number) => {
-    let foundExercise = exercises?.find(
+    const foundExercise = exercises?.find(
       (e: exerciseType) => e.exerciseid == eID
     );
     if (foundExercise) {
