@@ -1,6 +1,6 @@
-import { Button, Text, TextInput, View } from "react-native";
+import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Card } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import axios from "axios";
@@ -14,6 +14,7 @@ const AddWorkoutModalRender = ({
 }: {
   workoutPlans: workoutType[] | null;
 }) => {
+  const [formPage, setFormPage] = useState(0);
   const navigation = useNavigation();
   let workoutNameInput = "";
 
@@ -97,12 +98,10 @@ const AddWorkoutModalRender = ({
   const handleChildTextChange = (newText: string) => {
     workoutNameInput = newText;
   };
-  // const formComplete = plansAssociated.length > 0 && workoutNameInput != "";
 
-  return (
-    <>
-      <View style={WPPstyles.backgroundContainer}>
-        <WorkoutDetails onTextChange={handleChildTextChange} />
+  const PageOne = () => {
+    return (
+      <>
         {/* Two options  */}
         {/* 1) Make association between workout programs and workout plans */}
         {/* 2) Create workout program at the time of plan creation */}
@@ -113,7 +112,76 @@ const AddWorkoutModalRender = ({
         />
         {/* Render Workout Cart somehow */}
         {plansAssociated.length > 0 && <RenderWorkoutCart />}
-        <CreateProgramButton />
+      </>
+    );
+  };
+  const PageTwo = () => {
+    return (
+      <>
+        <WorkoutDetails onTextChange={handleChildTextChange} />
+      </>
+    );
+  };
+  const NextButton = () => {
+    return (
+      <TouchableOpacity
+        style={[
+          WPPstyles.backNextbuttonContainer,
+          formPage > 0 && WPPstyles.backNextbuttonActive,
+        ]}
+        onPress={() => {
+          if (formPage > 0) {
+            setFormPage(formPage - 1);
+          }
+        }}
+        disabled={formPage == 0}
+      >
+        <Text
+          style={[
+            WPPstyles.backNextbuttonText,
+            formPage > 0 && WPPstyles.backNexttextActive,
+          ]}
+        >
+          Back
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+  const BackButton = () => {
+    return (
+      <TouchableOpacity
+        style={[
+          WPPstyles.backNextbuttonContainer,
+          formPage < 1 && WPPstyles.backNextbuttonActive,
+        ]}
+        onPress={() => {
+          if (formPage < 1) {
+            setFormPage(formPage + 1);
+          }
+        }}
+        disabled={formPage == 1}
+      >
+        <Text
+          style={[
+            WPPstyles.backNextbuttonText,
+            formPage < 1 && WPPstyles.backNexttextActive,
+          ]}
+        >
+          Next
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+  return (
+    <>
+      <View style={WPPstyles.backgroundContainer}>
+        {formPage == 0 && <PageOne />}
+        {formPage == 1 && <PageTwo />}
+        <View style={WPPstyles.backNextContainer}>
+          <NextButton />
+          {formPage == 1 && <CreateProgramButton />}
+          <BackButton />
+        </View>
       </View>
     </>
   );
