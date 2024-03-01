@@ -1,22 +1,38 @@
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import { Link, useNavigation } from "expo-router";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, Pressable, Button } from "react-native";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  Button,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import Constants from "expo-constants";
-import { exerciseType } from "../../types/DatabaseTypes";
+import {
+  combinedExerciseProgramType,
+  exerciseType,
+} from "../../types/DatabaseTypes";
+import CWMStyles from "../styles/CreateWorkoutModalStyling";
+import { Card } from "react-native-paper";
+import NextButton from "../components/GenericForm/NextButton/NextButton";
+import BackButton from "../components/GenericForm/BackButton/BackButton";
 
 const MyWorkoutRoutinesModal: React.FC = () => {
   const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const [exercises, setExercises] = useState<exerciseType[]>([]);
-  const [exercisesByMG, setExercisesByMG] = useState<exerciseType[] | null>(
-    null
-  );
+  const [exercisesByMG, setExercisesByMG] = useState<exerciseType[]>([]);
   const [exerciseTypes, setExerciseTypes] = useState<string[]>([]);
 
   const [workoutCart, setWorkoutCart] = useState<exerciseType[]>([]);
+  const [formPage, setFormPage] = useState<number>(0);
   const navigation = useNavigation();
+
+  const [sets, setSets] = useState<number[]>([]);
+  const temporarySets = useRef([...sets]);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -46,6 +62,17 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     });
   }, [navigation]);
 
+  const applyChanges = () => {
+    setSets(temporarySets.current);
+  };
+
+  const accumulateChanges = (idx: number, val: number) => {
+    temporarySets.current[idx] = val;
+  };
+  const setupTemporarySets = () => {
+    temporarySets.current = sets;
+  };
+
   const filterExercises = (muscletype: string) => {
     return exercises?.filter((e: exerciseType) => {
       if (e.muscletype == muscletype) {
@@ -62,94 +89,210 @@ const MyWorkoutRoutinesModal: React.FC = () => {
     );
     if (foundExercise) {
       setWorkoutCart([...workoutCart, foundExercise]);
+      setSets([...sets, 1]);
     }
   };
-  const createWorkout = async () => {
-    const data = { programname: "Test", exercises: workoutCart };
-    try {
-      const wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
-      // workoutCart.map((e: any) => {});
-      console.log(wResponse);
-    } catch (error) {
-      console.error("Error creating new workout: ", error);
-    }
+  const removeFromCart = (idx: number) => {
+    const newCart = [...workoutCart];
+    newCart.splice(idx, 1);
+    setWorkoutCart(newCart);
+
+    const newSets = [...sets];
+    newSets.splice(idx, 1);
+    setSets(newSets);
+  };
+  const clearCart = () => {
+    setWorkoutCart([]);
+    setSets([]);
   };
 
-  return (
-    <View style={{ backgroundColor: "#ffffff", height: "100%" }}>
-      <SelectDropdown
-        defaultButtonText="Select a Muscle Group"
-        data={exerciseTypes}
-        buttonStyle={{
-          width: "100%",
-          height: 50,
-          backgroundColor: "#FFF",
-          borderRadius: 8,
-          borderWidth: 1,
-          borderColor: "#444",
-        }}
-        onSelect={(selectedItem) => {
-          setExercisesByMG(filterExercises(selectedItem));
-        }}
-        dropdownIconPosition="right"
-        renderDropdownIcon={(isOpened) => {
-          return (
-            <Entypo
-              name={isOpened ? "chevron-down" : "chevron-up"}
-              size={24}
-              color="black"
-            />
-          );
-        }}
-      />
-      {exercisesByMG?.map((e: exerciseType) => {
-        return (
-          <Pressable
-            onPress={() => {
-              addtoCart(e.exerciseid);
-            }}
-          >
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Text>{e.exercisename}</Text>
-              <Text>{e.muscletype}</Text>
-              {e.othermusclesworked.map((i: string) => {
-                return <Text>{i}</Text>;
+  const createWorkout = async () => {
+    const data = { programname: "Test", exercises: workoutCart, sets: sets };
+    console.log(data);
+    // try {
+    //   const wResponse = await axios.post(`${apiUrl}/workouts/newWorkout`, data);
+    //   // workoutCart.map((e: any) => {});
+    //   console.log(wResponse);
+    // } catch (error) {
+    //   console.error("Error creating new workout: ", error);
+    // }
+  };
+  const ExerciseByMG = ({ e }: { e: exerciseType }) => {
+    return (
+      <Pressable onPress={() => addtoCart(e.exerciseid)}>
+        <View style={CWMStyles.EMGView}>
+          <Text style={CWMStyles.exerciseNameStyle}>{e.exercisename}</Text>
+          <Text style={CWMStyles.muscleTypeStyle}>{e.muscletype}</Text>
+          <View style={CWMStyles.EMGOtherView}>
+            {e.othermusclesworked[0] != "" &&
+              e.othermusclesworked.map((i: string, index: number) => {
+                return (
+                  <Text key={index} style={CWMStyles.EMGOtherText}>
+                    • {i}
+                  </Text>
+                );
               })}
-            </View>
-          </Pressable>
-        );
-      })}
-      <Text>-----------------------</Text>
-      <View>
-        {workoutCart?.map((e: exerciseType) => {
-          return (
-            <View
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
+  const ExerciseInCart = ({ e, idx }: { e: exerciseType; idx: number }) => {
+    return (
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <Text style={CWMStyles.exerciseNameStyle}>{e.exercisename}</Text>
+        <Pressable onPress={() => removeFromCart(idx)}>
+          <FontAwesome name="trash" size={24} color="black" />
+        </Pressable>
+      </View>
+    );
+  };
+  const BottomButtons = () => {
+    return (
+      <View style={CWMStyles.backNextCreateView}>
+        <BackButton
+          formPage={formPage}
+          setFormPage={setFormPage}
+          onAdditionalPress={applyChanges}
+        />
+        <Link href="/myWorkoutRoutinesModal" asChild>
+          <Button
+            onPress={() => {
+              createWorkout();
+            }}
+            title="Create Workout"
+          />
+        </Link>
+        <NextButton
+          maxPage={1}
+          formPage={formPage}
+          setFormPage={setFormPage}
+          onAdditionalPress={setupTemporarySets}
+        />
+      </View>
+    );
+  };
+  const SetsPerExercise = ({
+    sets,
+    idx,
+    accumulateChanges,
+    exercise,
+  }: {
+    sets: number[];
+    idx: number;
+    accumulateChanges: (idx: number, val: number) => void;
+    exercise: exerciseType;
+  }) => {
+    const [numSets, setNumSets] = useState(sets[idx]);
+    const increment = () => {
+      accumulateChanges(idx, sets[idx] + 1);
+      setNumSets(sets[idx]);
+    };
+    const decrement = () => {
+      if (sets[idx] > 1) {
+        accumulateChanges(idx, sets[idx] - 1);
+        setNumSets(sets[idx]);
+      }
+    };
+    return (
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <TouchableOpacity onPress={decrement}>
+          <Text>-</Text>
+        </TouchableOpacity>
+        <Text>
+          {exercise.exercisename} - {numSets}
+        </Text>
+        <TouchableOpacity onPress={increment}>
+          <Text>+</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  if (formPage == 0) {
+    return (
+      <View style={CWMStyles.backgroundView}>
+        <SelectDropdown
+          defaultButtonText="Select a Muscle Group"
+          data={exerciseTypes}
+          buttonStyle={CWMStyles.SelectMuscleGroupButton}
+          onSelect={(selectedItem) => {
+            setExercisesByMG(filterExercises(selectedItem));
+          }}
+          dropdownIconPosition="right"
+          renderDropdownIcon={(isOpened) => {
+            return (
+              <Entypo
+                name={isOpened ? "chevron-down" : "chevron-up"}
+                size={24}
+                color="black"
+              />
+            );
+          }}
+        />
+        {exercisesByMG?.length > 0 && (
+          <Card style={{ margin: 10 }}>
+            <Card.Content>
+              <ScrollView style={CWMStyles.exercisesScrollView}>
+                {exercisesByMG?.map((e: exerciseType, index: number) => (
+                  <ExerciseByMG e={e} key={e.exercisename + "" + index} />
+                ))}
+              </ScrollView>
+            </Card.Content>
+          </Card>
+        )}
+        {workoutCart.length > 0 && (
+          <Card style={{ margin: 10 }}>
+            <Card.Title
+              title="Exercise Cart"
+              titleStyle={{ alignSelf: "center" }}
               style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "center",
+                borderColor: "#3d5a80",
               }}
-            >
-              <Text>{e.exercisename}</Text>
-              <Text>3</Text>
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <Text>6</Text>
-                <Text> to </Text>
-                <Text>8</Text>
-              </View>
-            </View>
+            />
+            <Card.Content>
+              <ScrollView style={CWMStyles.cartScrollView}>
+                {workoutCart?.map((e: exerciseType, idx: number) => (
+                  <ExerciseInCart e={e} idx={idx} key={"WorkoutCart" + idx} />
+                ))}
+
+                <Button
+                  onPress={() => {
+                    clearCart();
+                  }}
+                  title="Clear Cart"
+                />
+              </ScrollView>
+            </Card.Content>
+          </Card>
+        )}
+        <BottomButtons />
+      </View>
+    );
+  }
+
+  return (
+    <>
+      <View>
+        {workoutCart.map((e: any, idx: number) => {
+          return (
+            <SetsPerExercise
+              sets={sets}
+              idx={idx}
+              exercise={e}
+              accumulateChanges={accumulateChanges}
+            />
           );
         })}
       </View>
-      <Link href="/myWorkoutRoutinesModal" asChild>
-        <Button
-          onPress={() => {
-            createWorkout();
-          }}
-          title="Create Workout"
-        />
-      </Link>
-    </View>
+      <BottomButtons />
+    </>
   );
 };
 

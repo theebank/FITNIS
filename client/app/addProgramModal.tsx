@@ -14,7 +14,7 @@ const AddWorkoutModalRender = ({
 }: {
   workoutPlans: workoutType[] | null;
 }) => {
-  const [formPage, setFormPage] = useState(0);
+  const [formPage, setFormPage] = useState<number>(0);
   const navigation = useNavigation();
   let workoutNameInput = "";
 
@@ -121,7 +121,7 @@ const AddWorkoutModalRender = ({
       </>
     );
   };
-  const NextButton = () => {
+  const BackButton = () => {
     return (
       <TouchableOpacity
         style={[
@@ -146,7 +146,7 @@ const AddWorkoutModalRender = ({
       </TouchableOpacity>
     );
   };
-  const BackButton = () => {
+  const NextButton = () => {
     return (
       <TouchableOpacity
         style={[
@@ -177,9 +177,9 @@ const AddWorkoutModalRender = ({
         {formPage == 0 && <PageOne />}
         {formPage == 1 && <PageTwo />}
         <View style={WPPstyles.backNextContainer}>
-          <NextButton />
-          {formPage == 1 && <CreateProgramButton />}
           <BackButton />
+          {formPage == 1 && <CreateProgramButton />}
+          <NextButton />
         </View>
       </View>
     </>
