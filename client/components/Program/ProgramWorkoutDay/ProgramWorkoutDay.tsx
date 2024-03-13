@@ -19,8 +19,8 @@ const ProgramWorkoutDay = ({
         <DataTable.Title style={{ display: "flex", width: 100 }}>
           Exercise
         </DataTable.Title>
-        <DataTable.Title numeric>Reps</DataTable.Title>
         <DataTable.Title numeric>Sets</DataTable.Title>
+        <DataTable.Title numeric>Reps</DataTable.Title>
       </DataTable.Header>
     );
   };

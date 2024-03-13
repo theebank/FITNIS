@@ -1,7 +1,7 @@
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, Text, TouchableOpacity, View } from "react-native";
 import WPPstyles from "../styles/WorkoutPlanPageStyling";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Card } from "react-native-paper";
+import { Card, TextInput } from "react-native-paper";
 import { useNavigation } from "expo-router";
 import axios from "axios";
 import Constants from "expo-constants";
@@ -42,11 +42,11 @@ const AddWorkoutModalRender = ({
     };
     return (
       <Card style={{ margin: 5 }}>
-        <Card.Title title="Workout Name" />
+        <Card.Title title="Program Name" />
         <Card.Content>
           <TextInput
             style={{ height: 40 }}
-            placeholder="Enter Workout Name"
+            placeholder="Enter Program Name"
             onChangeText={handleTextChange}
             value={text}
           />
