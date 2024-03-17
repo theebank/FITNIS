@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
-import { Pressable, useColorScheme } from "react-native";
+import { Pressable, View, useColorScheme, Text } from "react-native";
 
 import Colors from "../../constants/Colors";
 
@@ -17,6 +17,34 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+  const LogWorkoutTabIcon = ({ focused }: { focused: any }) => {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          // The following styles are for the circular background
+          width: 60,
+          height: 60,
+          borderRadius: 30,
+          backgroundColor: focused ? "#98C1D9" : "#EE6C4D", // orange background
+        }}
+      >
+        <MaterialCommunityIcons name="dumbbell" size={24} color="white" />
+        <Text
+          style={{
+            color: "white",
+            fontSize: 10,
+            fontWeight: "bold",
+            marginTop: -3,
+          }}
+        >
+          Log Workout
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <Tabs
@@ -49,6 +77,15 @@ export default function TabLayout() {
               color={color}
             />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="LogWorkout"
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "#3d5a80" },
+          headerTitleStyle: { color: "#ffffff" },
+          tabBarIcon: ({ focused }) => <LogWorkoutTabIcon focused={focused} />,
         }}
       />
       <Tabs.Screen
@@ -86,13 +123,6 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
     </Tabs>
