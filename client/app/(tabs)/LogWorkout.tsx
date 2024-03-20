@@ -1,12 +1,15 @@
-import { StyleSheet } from "react-native";
+import { Button, StyleSheet } from "react-native";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
+import { Link } from "expo-router";
 
-export default function TabOneScreen() {
+export default function LogWorkout() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Log Workout</Text>
+      <Link href="/freeStyleWorkout" asChild>
+        <Button title="Start Freestyle Workout" />
+      </Link>
     </View>
   );
 }

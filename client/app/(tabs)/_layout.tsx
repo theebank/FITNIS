@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
 import { Pressable, View, useColorScheme, Text } from "react-native";
 
@@ -60,7 +60,10 @@ export default function TabLayout() {
           title: "Home",
           headerStyle: { backgroundColor: "#3d5a80" },
           headerTitleStyle: { color: "#ffffff" },
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <Entypo name="home" size={32} color={color} />
+          ),
+          tabBarLabel: () => null,
         }}
       />
 
@@ -73,19 +76,21 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="weight-lifter"
-              size={24}
+              size={32}
               color={color}
             />
           ),
+          tabBarLabel: () => null,
         }}
       />
       <Tabs.Screen
         name="LogWorkout"
         options={{
-          title: "",
+          title: "Log Workout",
           headerStyle: { backgroundColor: "#3d5a80" },
           headerTitleStyle: { color: "#ffffff" },
           tabBarIcon: ({ focused }) => <LogWorkoutTabIcon focused={focused} />,
+          tabBarLabel: () => null,
         }}
       />
       <Tabs.Screen
@@ -97,10 +102,11 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="progress-clock"
-              size={24}
+              size={32}
               color={color}
             />
           ),
+          tabBarLabel: () => null,
         }}
       />
       <Tabs.Screen
@@ -123,6 +129,7 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+          tabBarLabel: () => null,
         }}
       />
     </Tabs>

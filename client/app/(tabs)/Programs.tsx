@@ -58,7 +58,7 @@ const Plans = () => {
               <Program
                 ProgramDetails={item}
                 removePlan={removePlan}
-                index={index}
+                // index={index}
                 key={"FlatList" + item.programid.toString()}
               />
             )}
