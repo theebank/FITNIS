@@ -1,5 +1,5 @@
 import { Link, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Text, View } from "react-native";
 import Timer from "../components/LogWorkout/Timer/Timer";
 

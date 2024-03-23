@@ -18,7 +18,7 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-  const LogWorkoutTabIcon = ({ focused }: { focused: any }) => {
+  const LogWorkoutTabIcon = ({ focused }: { focused: boolean }) => {
     return (
       <View
         style={{
