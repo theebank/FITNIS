@@ -54,7 +54,7 @@ const Plans = () => {
           <FlatList
             data={programs}
             keyExtractor={(item) => item.programid.toString()}
-            renderItem={({ item, index }) => (
+            renderItem={({ item }) => (
               <Program
                 ProgramDetails={item}
                 removePlan={removePlan}
