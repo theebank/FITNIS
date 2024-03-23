@@ -26,7 +26,7 @@ const freeStyleWorkout = () => {
           <Text>Sets Value</Text>
         </View>
       </View>
-      <Link asChild href="/WorkoutModals/AddExerciseModal">
+      <Link asChild href="/LogworkoutModals/AddExerciseModal">
         <Button title="Add Exercise" />
       </Link>
       <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
