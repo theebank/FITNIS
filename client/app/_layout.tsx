@@ -54,6 +54,19 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen
+          name="LogworkoutModals/AddExerciseModal"
+          options={{
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="LogworkoutModals/AllMuscleGroupModal"
+          options={{
+            presentation: "modal",
+            headerShown: false,
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );
