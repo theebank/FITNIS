@@ -3,7 +3,12 @@ import React, { useEffect } from "react";
 import { Button, Text, View } from "react-native";
 import Timer from "../components/LogWorkout/Timer/Timer";
 
+import { useDispatch, useSelector } from "react-redux";
+
 const freeStyleWorkout = () => {
+  const cart = useSelector((state: any) => state.logWorkout.ExerciseCart);
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -25,6 +30,11 @@ const freeStyleWorkout = () => {
           <Text>Sets: </Text>
           <Text>Sets Value</Text>
         </View>
+      </View>
+      <View>
+        {cart.map((e: string) => {
+          return <Text>{e}</Text>;
+        })}
       </View>
       <Link asChild href="/LogworkoutModals/AddExerciseModal">
         <Button title="Add Exercise" />

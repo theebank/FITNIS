@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Button, ScrollView, Text, View } from "react-native";
 import { exerciseType } from "../../../types/DatabaseTypes";
 import { Link, useNavigation } from "expo-router";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../features/LogWorkout/LogWorkoutSlice";
 
 export default function AddExerciseModal() {
   const apiUrl = Constants.expoConfig?.extra?.API_URL;
@@ -11,6 +13,8 @@ export default function AddExerciseModal() {
   const [exerciseTypes, setExerciseTypes] = useState<string[]>([]);
   const navigation = useNavigation();
   const [exercisesByMG, setExercisesByMG] = useState<exerciseType[]>(exercises);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -21,7 +25,6 @@ export default function AddExerciseModal() {
     const fetchExerciseTypes = async () => {
       const response = await axios.get(`${apiUrl}/exercises/alltypes`);
       setExerciseTypes(response.data);
-      console.log(exerciseTypes);
     };
     fetchExercises();
     fetchExerciseTypes();
@@ -32,7 +35,6 @@ export default function AddExerciseModal() {
       headerTintColor: "#ffffff",
     });
   }, []);
-  console.log(exercisesByMG);
 
   return (
     <View>
@@ -46,7 +48,19 @@ export default function AddExerciseModal() {
       {/* Results */}
       <ScrollView>
         {exercises.map((e) => {
-          return <Text>{e.exercisename}</Text>;
+          return (
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+              <Button
+                title="+"
+                onPress={() => {
+                  dispatch(addToCart(e.exercisename));
+                }}
+              />
+              <Text>{e.exercisename}</Text>
+            </View>
+          );
         })}
       </ScrollView>
     </View>
