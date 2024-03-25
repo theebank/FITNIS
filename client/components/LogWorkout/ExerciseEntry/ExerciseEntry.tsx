@@ -1,5 +1,4 @@
 import { Button, Text, View } from "react-native";
-import { exerciseType } from "../../../../types/DatabaseTypes";
 import { useState } from "react";
 import { Card } from "react-native-paper";
 
@@ -15,7 +14,7 @@ export default function ExerciseEntry({
   const [numSets, setNumSets] = useState<number>(0);
 
   function SetDetails() {
-    let ret: React.JSX.Element[] = [];
+    const ret: React.JSX.Element[] = [];
     for (let i = 0; i < numSets; i++) {
       ret.push(
         <View

@@ -6,29 +6,26 @@ import { exerciseType } from "../../../types/DatabaseTypes";
 import { Link, useNavigation } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addToCart,
-  removeFromCart,
-} from "../../features/LogWorkout/LogWorkoutSlice";
-import {
   redefineTypes,
   redefineExercises,
 } from "../../features/Exercises/ExerciseSlice";
 import AddExerciseEntry from "../../components/LogWorkout/AddExercise/AddExerciseEntry";
+import { RootState } from "../../store/store";
 
 export default function AddExerciseModal() {
   const apiUrl = Constants.expoConfig?.extra?.API_URL;
   const navigation = useNavigation();
 
-  const cart = useSelector((state: any) => state.logWorkout.ExerciseCart);
   const exercises: exerciseType[] = useSelector(
-    (state: any) => state.exercises.Exercises
+    (state: RootState) => state.exercises.Exercises
   );
   const exerciseTypes: string[] = useSelector(
-    (state: any) => state.exercises.exerciseTypes
+    (state: RootState) => state.exercises.exerciseTypes
   );
   const dispatch = useDispatch();
 
   const [exercisesByMG, setExercisesByMG] = useState<exerciseType[]>(exercises);
+  console.log(exercisesByMG);
   useEffect(() => {
     const fetchExercises = async () => {
       const response = await axios.get(`${apiUrl}/exercises/all`);

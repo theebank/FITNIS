@@ -3,13 +3,12 @@ import React, { useEffect } from "react";
 import { Button, ScrollView, Text, View } from "react-native";
 import Timer from "../components/LogWorkout/Timer/Timer";
 
-import { useDispatch, useSelector } from "react-redux";
-import { exerciseType } from "../../types/DatabaseTypes";
+import { useSelector } from "react-redux";
 import ExerciseEntry from "../components/LogWorkout/ExerciseEntry/ExerciseEntry";
+import { RootState } from "../store/store";
 
 const freeStyleWorkout = () => {
-  const cart = useSelector((state: any) => state.logWorkout.ExerciseCart);
-  const dispatch = useDispatch();
+  const cart = useSelector((state: RootState) => state.logWorkout.ExerciseCart);
 
   const navigation = useNavigation();
 
@@ -41,7 +40,7 @@ const freeStyleWorkout = () => {
         </View>
       </View>
       <ScrollView>
-        {cart.map((e: any) => {
+        {cart.map((e: string) => {
           return <ExerciseEntry exercisename={e} />;
         })}
         <Link asChild href="/LogworkoutModals/AddExerciseModal">

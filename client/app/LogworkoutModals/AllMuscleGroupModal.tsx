@@ -5,16 +5,16 @@ import { Button, Text, View } from "react-native";
 import {
   decrement,
   increment,
-  incrementByAmount,
   incrementArray,
 } from "../../features/counter/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 export default function AllMuscleGroupModal() {
-  const count = useSelector((state: any) => state.counter.value);
+  const count = useSelector((state: RootState) => state.counter.value);
   const dispatch = useDispatch();
 
-  const array = useSelector((state: any) => state.counter.valarray);
+  const array = useSelector((state: RootState) => state.counter.valarray);
 
   const navigation = useNavigation();
   useEffect(() => {
