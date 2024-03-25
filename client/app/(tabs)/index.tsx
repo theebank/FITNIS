@@ -4,7 +4,6 @@ import HPstyles from "../../styles/HomePageStyling";
 
 import { View } from "../../components/Themed";
 import PlotGraph from "../../components/PlotGraph/PlotGraph";
-
 const WeightData = {
   labels: ["Jan", "Feb", "Mar", "Apr", "May"],
   datasets: [

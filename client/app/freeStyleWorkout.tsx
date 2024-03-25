@@ -1,9 +1,15 @@
 import { Link, useNavigation } from "expo-router";
 import React, { useEffect } from "react";
-import { Button, Text, View } from "react-native";
+import { Button, ScrollView, Text, View } from "react-native";
 import Timer from "../components/LogWorkout/Timer/Timer";
 
+import { useSelector } from "react-redux";
+import ExerciseEntry from "../components/LogWorkout/ExerciseEntry/ExerciseEntry";
+import { RootState } from "../store/store";
+
 const freeStyleWorkout = () => {
+  const cart = useSelector((state: RootState) => state.logWorkout.ExerciseCart);
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -15,7 +21,14 @@ const freeStyleWorkout = () => {
   });
   return (
     <View>
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          borderBottomWidth: 2,
+          borderColor: "#000000",
+        }}
+      >
         <Timer />
         <View style={{ flexDirection: "column", alignItems: "center" }}>
           <Text>Volume: </Text>
@@ -26,13 +39,24 @@ const freeStyleWorkout = () => {
           <Text>Sets Value</Text>
         </View>
       </View>
-      <Link asChild href="/LogworkoutModals/AddExerciseModal">
-        <Button title="Add Exercise" />
-      </Link>
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-        <Button title="Settings" />
-        <Button title="Cancel Workout" />
-      </View>
+      <ScrollView>
+        {cart.map((e: string) => {
+          return <ExerciseEntry exercisename={e} />;
+        })}
+        <Link asChild href="/LogworkoutModals/AddExerciseModal">
+          <Button title="Add Exercise" />
+        </Link>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            marginBottom: 55,
+          }}
+        >
+          <Button title="Settings" />
+          <Button title="Cancel Workout" />
+        </View>
+      </ScrollView>
     </View>
   );
 };
