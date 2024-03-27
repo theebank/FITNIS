@@ -1,5 +1,4 @@
 import { Button, Text, TextInput, View } from "react-native";
-import { useState } from "react";
 import { Card } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import {

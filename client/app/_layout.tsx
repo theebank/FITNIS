@@ -7,7 +7,7 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { Button, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { Provider } from "react-redux";
 import store from "../store/store";
 

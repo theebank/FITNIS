@@ -1,11 +1,7 @@
 import { Button, Text, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { useDispatch } from "react-redux";
 import { exerciseType } from "../../../../types/DatabaseTypes";
-import {
-  addToCart,
-  removeFromCart,
-} from "../../../features/LogWorkout/LogWorkoutSlice";
+import { addToCart } from "../../../features/LogWorkout/LogWorkoutSlice";
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
 
