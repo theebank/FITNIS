@@ -6,12 +6,14 @@ import Timer from "../components/LogWorkout/Timer/Timer";
 import { useSelector } from "react-redux";
 import ExerciseEntry from "../components/LogWorkout/ExerciseEntry/ExerciseEntry";
 import { RootState } from "../store/store";
+import { exerciseType } from "../../types/DatabaseTypes";
 
 const freeStyleWorkout = () => {
   const cart = useSelector((state: RootState) => state.logWorkout.ExerciseCart);
 
   const navigation = useNavigation();
 
+  console.log(cart);
   useEffect(() => {
     navigation.setOptions({
       title: "Free Style Your Workout!",
@@ -40,8 +42,8 @@ const freeStyleWorkout = () => {
         </View>
       </View>
       <ScrollView>
-        {cart.map((e: string) => {
-          return <ExerciseEntry exercisename={e} />;
+        {cart.map((e: exerciseType, idx: number) => {
+          return <ExerciseEntry exercisename={e.exercisename} idx={idx} />;
         })}
         <Link asChild href="/LogworkoutModals/AddExerciseModal">
           <Button title="Add Exercise" />

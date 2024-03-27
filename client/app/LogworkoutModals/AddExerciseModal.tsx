@@ -25,7 +25,7 @@ export default function AddExerciseModal() {
   const dispatch = useDispatch();
 
   const [exercisesByMG, setExercisesByMG] = useState<exerciseType[]>(exercises);
-  console.log(exercisesByMG);
+  // console.log(exercisesByMG);
   useEffect(() => {
     const fetchExercises = async () => {
       const response = await axios.get(`${apiUrl}/exercises/all`);

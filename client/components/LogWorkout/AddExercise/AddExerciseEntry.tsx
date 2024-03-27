@@ -6,31 +6,38 @@ import {
   addToCart,
   removeFromCart,
 } from "../../../features/LogWorkout/LogWorkoutSlice";
+import { useNavigation } from "expo-router";
+import { useEffect } from "react";
 
 export default function AddExerciseEntry({
   exercise,
 }: {
   exercise: exerciseType;
 }) {
-  const cart = useSelector((state: RootState) => state.logWorkout.ExerciseCart);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="Close"
+          onPress={() => navigation.goBack()}
+          color="white"
+        />
+      ),
+    });
+  }, [navigation]);
+
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {cart.includes(exercise.exercisename) ? (
-        <Button
-          title="-"
-          onPress={() => {
-            dispatch(removeFromCart(exercise.exercisename));
-          }}
-        />
-      ) : (
-        <Button
-          title="+"
-          onPress={() => {
-            dispatch(addToCart(exercise.exercisename));
-          }}
-        />
-      )}
+      <Button
+        title="+"
+        onPress={() => {
+          dispatch(addToCart(exercise));
+          navigation.goBack();
+        }}
+      />
       <Text>{exercise.exercisename}</Text>
     </View>
   );

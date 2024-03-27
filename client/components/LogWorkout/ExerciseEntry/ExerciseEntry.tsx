@@ -1,6 +1,13 @@
-import { Button, Text, View } from "react-native";
+import { Button, Text, TextInput, View } from "react-native";
 import { useState } from "react";
 import { Card } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  decrementSets,
+  incrementSets,
+  removeFromCart,
+} from "../../../features/LogWorkout/LogWorkoutSlice";
+import { RootState } from "../../../store/store";
 
 export default function ExerciseEntry({
   //   exercise,
@@ -8,14 +15,19 @@ export default function ExerciseEntry({
   //   exercise: exerciseType;
   // }) {
   exercisename,
+  idx,
 }: {
   exercisename: string;
+  idx: number;
 }) {
-  const [numSets, setNumSets] = useState<number>(0);
+  const sets = useSelector(
+    (state: RootState) => state.logWorkout.setsPerExercise
+  );
+  const dispatch = useDispatch();
 
   function SetDetails() {
     const ret: React.JSX.Element[] = [];
-    for (let i = 0; i < numSets; i++) {
+    for (let i = 0; i < sets[idx]; i++) {
       ret.push(
         <View
           style={{
@@ -24,27 +36,44 @@ export default function ExerciseEntry({
             alignItems: "center",
           }}
         >
-          <Text>Set SetValue</Text>
-          <Text>Weight WeightInput</Text>
-          <Text>Reps RepInput</Text>
+          <Text>Set {i + 1}</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Weight </Text>
+            <TextInput placeholder="0" />
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Reps </Text>
+            <TextInput placeholder="0" />
+          </View>
         </View>
       );
     }
     if (ret.length > 0) {
       ret.push(
-        <Button title="Remove Set" onPress={() => setNumSets(numSets - 1)} />
+        <Button
+          title="Remove Set"
+          onPress={() => dispatch(decrementSets(idx))}
+        />
       );
     }
     return ret;
   }
   return (
     <Card style={{ margin: 10 }}>
-      <Card.Title title={exercisename} />
+      <Card.Title
+        title={exercisename}
+        right={() => (
+          <Button
+            title="Remove"
+            onPress={() => dispatch(removeFromCart(idx))}
+          />
+        )}
+      />
       <Card.Content>
         {/* <Text>{exercisename}</Text> */}
         <SetDetails />
 
-        <Button title="Add Set" onPress={() => setNumSets(numSets + 1)} />
+        <Button title="Add Set" onPress={() => dispatch(incrementSets(idx))} />
       </Card.Content>
     </Card>
   );
